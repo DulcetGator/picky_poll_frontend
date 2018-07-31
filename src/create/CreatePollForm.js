@@ -1,29 +1,43 @@
 import React, { Component } from "react";
+import { createPoll } from "../api";
+
+type Props = {
+  onCreatePoll: ({}) => void
+};
+
+type WriteInCandidate = {
+  value: string,
+  key: number
+};
 
 type State = {
   description: string,
-  options: string[]
+  options: WriteInCandidate[]
 };
 
-class CreatePollForm extends Component<{}, State> {
-  constructor(props: {}) {
+class CreatePollForm extends Component<Props, State> {
+  lastCandidate = 0;
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       description: "",
-      options: ["", "", ""]
+      options: [{ value: "", key: 0 }]
     };
   }
 
   render() {
-    let answers = this.state.options.map((option, index) => (
-      <li>
+    let answers = this.state.options.map((candidate, index) => (
+      <li key={candidate.key}>
         <input
           onChange={this.handleCandidateChange(index)}
           type="text"
           placeholder={"Candidate " + (index + 1)}
         />
-        <button>Delete</button>
+        <button type="button" onClick={this.handleDeleteCandidate(index)}>
+          Delete
+        </button>
       </li>
     ));
     return (
@@ -51,27 +65,42 @@ class CreatePollForm extends Component<{}, State> {
   ) => {
     event.preventDefault();
     this.setState({
-      description: "changed"
+      description: event.currentTarget.value
     });
   };
 
   handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(this.state);
+
+    createPoll(
+      this.state.description,
+      this.state.options.map(c => c.value)
+    ).then(this.props.onCreatePoll);
   };
 
   handleCandidateChange = (index: number) => (
     event: SyntheticEvent<HTMLInputElement>
   ) => {
+    let changedCandidate = {
+      key: this.state.options[index].key,
+      value: event.currentTarget.value
+    };
     let newCandidates = this.state.options
       .slice(0, index)
-      .concat([event.currentTarget.value])
+      .concat(changedCandidate)
       .concat(this.state.options.slice(index + 1));
     this.setState({ options: newCandidates });
   };
 
   handleCreateCandidate = (event: SyntheticEvent<HTMLButtonElement>) => {
-    this.setState({ options: this.state.options.concat([""]) });
+    this.setState({
+      options: this.state.options.concat([
+        {
+          key: ++this.lastCandidate,
+          value: ""
+        }
+      ])
+    });
   };
 
   handleDeleteCandidate = (index: number) => (
