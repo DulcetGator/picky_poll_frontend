@@ -6,7 +6,7 @@ function createPoll(description: string, options: string[]) {
     method: "POST",
     body: JSON.stringify({
       description: description,
-      choices: options
+      candidates: options
     })
   });
 }
