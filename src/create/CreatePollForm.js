@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { createPoll } from "../api";
 
 type Props = {
-  onCreatePoll: ({}) => void
+  onCreatePoll: ({ id: string }) => void
 };
 
 type WriteInCandidate = {

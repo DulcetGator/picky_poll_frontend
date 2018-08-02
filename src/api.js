@@ -8,7 +8,7 @@ function createPoll(description: string, options: string[]) {
       description: description,
       candidates: options
     })
-  });
+  }).then(r => r.json());
 }
 
 export { createPoll };
