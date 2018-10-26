@@ -16,12 +16,19 @@ class App extends Component<Props> {
         </header>
         <Router>
           <div>
+            <Route path="/" component={HomeRoute} />
             <Route path="/create" component={CreatePollRoute} />
             <Route path="/view/:pollId" component={PollDetailsRoute} />
           </div>
         </Router>
       </div>
     );
+  }
+}
+
+class HomeRoute extends Component<{}, {}> {
+  render() {
+    return <Redirect to="/create" />;
   }
 }
 
@@ -34,7 +41,7 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
 
   render() {
     return this.state.poll ? (
-      <Redirect to={"/view/" + this.state.poll.id} />
+      <Redirect to={`/view/${this.state.poll.id}`} push="true" />
     ) : (
       <CreatePollForm
         onCreatePoll={p => {
