@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
 import CreatePollForm from "./create/CreatePollForm";
+import ViewPoll from "./viewPoll/ViewPoll";
 
 type Props = {};
 
@@ -16,9 +17,9 @@ class App extends Component<Props> {
         </header>
         <Router>
           <div>
-            <Route path="/" component={HomeRoute} />
             <Route path="/create" component={CreatePollRoute} />
             <Route path="/view/:pollId" component={PollDetailsRoute} />
+            <Route exact path="/" component={HomeRoute} />
           </div>
         </Router>
       </div>
@@ -41,7 +42,7 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
 
   render() {
     return this.state.poll ? (
-      <Redirect to={`/view/${this.state.poll.id}`} push="true" />
+      <Redirect to={`/view/${this.state.poll.id}`} push={true} />
     ) : (
       <CreatePollForm
         onCreatePoll={p => {
@@ -52,8 +53,7 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
   }
 }
 const PollDetailsRoute = ({ match }) => {
-  let pollId = match.params.pollId;
-  return <div>View Poll Details. PollId: {pollId}</div>;
+  return <ViewPoll pollId={match.params.pollId} />;
 };
 
 export default App;
