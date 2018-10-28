@@ -1,7 +1,7 @@
 export type Poll = {
-  id: String,
-  description: String,
-  candidates: String[]
+  id: string,
+  description: string,
+  candidates: string[]
 };
 
 function createPoll(description: string, options: string[]) {
