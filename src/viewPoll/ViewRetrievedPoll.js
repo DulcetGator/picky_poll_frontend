@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import type { Poll } from "../api";
-import Ranker from "./Ranker";
+import VoteForm from "./VoteForm";
 
 type Props = {
   poll: Poll
@@ -18,7 +18,10 @@ class ViewRetrievedPoll extends Component<Props, State> {
     return (
       <div>
         <p>{this.props.poll.description}</p>
-        <Ranker candidates={this.props.poll.candidates} />
+        <VoteForm
+          candidates={this.props.poll.candidates}
+          pollId={this.props.poll.id}
+        />
       </div>
     );
   }

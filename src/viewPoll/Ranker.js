@@ -66,12 +66,11 @@ class Candidate extends Component<CandidateProps, CandidateState> {
 }
 
 type Props = {
-  candidates: string[]
+  candidates: string[],
+  onUpdateCandidates: (string[]) => void
 };
 
-type State = {
-  rankedCandidates: string[]
-};
+type State = {};
 
 class Ranker extends Component<Props, State> {
   candidateRefs: Ref<typeof Candidate>[];
@@ -80,9 +79,7 @@ class Ranker extends Component<Props, State> {
     super(props);
     let rankedCandidates = props.candidates.slice(0);
     this.candidateRefs = rankedCandidates.map(_ => React.createRef());
-    this.state = {
-      rankedCandidates: rankedCandidates
-    };
+    this.state = {};
   }
 
   render() {
@@ -92,18 +89,16 @@ class Ranker extends Component<Props, State> {
         onDrop={e => this.onDrop(e)}
         onDragOver={e => e.preventDefault()}
       >
-        {this.state.rankedCandidates.map((candidate: string, index: number) => {
-          return (
-            <Candidate
-              name={candidate}
-              bottomMarker={true}
-              ref={this.candidateRefs[index]}
-              onStopDragging={e => {
-                this.onStopDraggingCandidate(index, e);
-              }}
-            />
-          );
-        })}
+        {this.props.candidates.map((candidate: string, index: number) => (
+          <Candidate
+            name={candidate}
+            bottomMarker={true}
+            ref={this.candidateRefs[index]}
+            onStopDragging={e => {
+              this.onStopDraggingCandidate(index, e);
+            }}
+          />
+        ))}
       </div>
     );
   }
@@ -114,19 +109,17 @@ class Ranker extends Component<Props, State> {
     );
     if (draggedFromIndex >= 0) {
       let draggedToIndex = this.getNewPosition(e);
-      let remainingCandidates = this.state.rankedCandidates
+      let remainingCandidates = this.props.candidates
         .slice(0, draggedFromIndex)
-        .concat(this.state.rankedCandidates.slice(draggedFromIndex + 1));
+        .concat(this.props.candidates.slice(draggedFromIndex + 1));
       remainingCandidates.splice(
         draggedToIndex <= draggedFromIndex
           ? draggedToIndex
           : draggedToIndex - 1,
         0,
-        this.state.rankedCandidates[draggedFromIndex]
+        this.props.candidates[draggedFromIndex]
       );
-      this.setState({
-        rankedCandidates: remainingCandidates
-      });
+      this.props.onUpdateCandidates(remainingCandidates);
     } else {
       console.log("something else dropped.");
       console.log(e.target);

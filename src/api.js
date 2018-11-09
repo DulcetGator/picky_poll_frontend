@@ -17,6 +17,19 @@ function createPoll(description: string, options: string[]) {
   }).then(r => r.json());
 }
 
+function postBallot(pollId: string, name: string, rankings: string[]) {
+  return fetch(`/polls/${pollId}/vote`, {
+    headers: {
+      "content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      rankings: rankings
+    })
+  });
+}
+
 function getPoll(pollId: string): Promise<Poll> {
   return fetch(`/polls/${pollId}`, {
     headers: {
@@ -25,4 +38,4 @@ function getPoll(pollId: string): Promise<Poll> {
   }).then(r => r.json());
 }
 
-export { createPoll, getPoll };
+export { createPoll, postBallot, getPoll };
