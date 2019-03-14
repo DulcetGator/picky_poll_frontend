@@ -30,12 +30,14 @@ function postBallot(pollId: string, name: string, rankings: string[]) {
   });
 }
 
-function getPoll(pollId: string): Promise<Poll> {
-  return fetch(`/polls/${pollId}`, {
+async function getPoll(pollId: string): Promise<Poll> {
+  let response = await fetch(`/polls/${pollId}`, {
     headers: {
       "content-type": "application/json"
     }
-  }).then(r => r.json());
+  })
+  let json = await response.json();
+  return json.poll
 }
 
 export { createPoll, postBallot, getPoll };

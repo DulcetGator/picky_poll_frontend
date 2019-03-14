@@ -44,14 +44,14 @@ class VoteForm extends Component<Props, State> {
     });
   }
 
-  onUpdateVoterName(event: ChangeEvent<TextInput>) {
-    let name = event.target.value;
+  onUpdateVoterName(event: SyntheticEvent<HTMLTextAreaElement>) {
+    let name = event.currentTarget.value;
     this.setState({
       voterName: name
     });
   }
 
-  onSubmit(event: FormEvent) {
+  onSubmit(event: SyntheticEvent<HTMLElement>) {
     event.preventDefault();
     postBallot(
       this.props.pollId,

@@ -13,7 +13,7 @@ type CandidateState = {
 };
 
 class Candidate extends Component<CandidateProps, CandidateState> {
-  card = React.createRef();
+  card: ?HTMLElement;
 
   constructor(props: CandidateProps) {
     super(props);
@@ -28,7 +28,7 @@ class Candidate extends Component<CandidateProps, CandidateState> {
       <div className={"candidate-wrapper " + bottomMarkerClass}>
         <div
           className={"candidate"}
-          ref={this.card}
+          ref={c => this.card=c}
           draggable
           onDragStart={e => this.onDragStart(e)}
         >
@@ -39,11 +39,11 @@ class Candidate extends Component<CandidateProps, CandidateState> {
   }
 
   getCenter(): { x: number, y: number } {
-    let current = this.card.current;
-    if (current) {
+    let current = this.card;
+    if (current != null) {
       let boundingRect = current.getBoundingClientRect();
-      let x = boundingRect.x + boundingRect.width / 2;
-      let y = boundingRect.y + boundingRect.height / 2;
+      let x = boundingRect.left + boundingRect.width / 2;
+      let y = boundingRect.top + boundingRect.height / 2;
       return { x: x, y: y };
     } else {
       throw new Error("Ref not set");
@@ -73,12 +73,12 @@ type Props = {
 type State = {};
 
 class Ranker extends Component<Props, State> {
-  candidateRefs: Ref<typeof Candidate>[];
+  candidateRefs: (?Candidate)[];
 
   constructor(props: Props) {
     super(props);
     let rankedCandidates = props.candidates.slice(0);
-    this.candidateRefs = rankedCandidates.map(_ => React.createRef());
+    this.candidateRefs = rankedCandidates.map(_ => null);
     this.state = {};
   }
 
@@ -93,7 +93,7 @@ class Ranker extends Component<Props, State> {
           <Candidate
             name={candidate}
             bottomMarker={true}
-            ref={this.candidateRefs[index]}
+            ref={c => this.candidateRefs[index]=c}
             onStopDragging={e => {
               this.onStopDraggingCandidate(index, e);
             }}
@@ -105,7 +105,7 @@ class Ranker extends Component<Props, State> {
 
   onDrop(e: DragEvent) {
     let draggedFromIndex = this.candidateRefs.findIndex(
-      c => c.current && (c.current: any).wasDragged(e)
+      c => c!= null && c.wasDragged(e)
     );
     if (draggedFromIndex >= 0) {
       let draggedToIndex = this.getNewPosition(e);
@@ -130,8 +130,8 @@ class Ranker extends Component<Props, State> {
 
   getNewPosition(e: DragEvent) {
     let centerYs = this.candidateRefs.map(r => {
-      if (r.current) {
-        return ((r.current: any): Candidate).getCenter().y;
+      if (r != null) {
+        return r.getCenter().y;
       } else {
         throw new Error("");
       }
