@@ -3,8 +3,9 @@
 
 .*\.test\.js
 
-.*/src/index.js
-.*/src/registerServiceWorker.js
+./src/index.js
+./src/registerServiceWorker.js
+./src/setupProxy.js
 
 [include]
 

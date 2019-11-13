@@ -5,7 +5,7 @@ export type Poll = {
 };
 
 function createPoll(description: string, options: string[]) {
-  return fetch("/polls", {
+  return fetch("/api/polls", {
     headers: {
       "content-type": "application/json"
     },
@@ -18,7 +18,7 @@ function createPoll(description: string, options: string[]) {
 }
 
 function postBallot(pollId: string, name: string, rankings: string[]) {
-  return fetch(`/polls/${pollId}/vote`, {
+  return fetch(`/api/polls/${pollId}/vote`, {
     headers: {
       "content-type": "application/json"
     },
@@ -31,7 +31,7 @@ function postBallot(pollId: string, name: string, rankings: string[]) {
 }
 
 async function getPoll(pollId: string): Promise<Poll> {
-  let response = await fetch(`/polls/${pollId}`, {
+  let response = await fetch(`/api/polls/${pollId}`, {
     headers: {
       "content-type": "application/json"
     }
