@@ -1,11 +1,9 @@
 [ignore]
 .*/node_modules/.*
-
 .*\.test\.js
-
-./src/index.js
-./src/registerServiceWorker.js
-./src/setupProxy.js
+.*/src/index\.js
+.*/src/registerServiceWorker\.js
+.*/src/setupProxy\.js
 
 [include]
 
