@@ -1,13 +1,16 @@
+import {type Identity } from './userIdentity.js'
+
 export type Poll = {
   id: string,
   description: string,
   candidates: string[]
 };
 
-function createPoll(description: string, options: string[]) {
+function createPoll(identity: Identity, description: string, options: string[]) {
   return fetch("/api/polls", {
     headers: {
-      "content-type": "application/json"
+      "content-type": "application/json",
+      "X-VOTE-SECRET": identity.key
     },
     method: "POST",
     body: JSON.stringify({

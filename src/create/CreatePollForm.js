@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { createPoll } from "../api";
+import IdentityContext, {LocalStoreIdentityService} from "../userIdentity.js"
 
 type Props = {
   onCreatePoll: ({ id: string }) => void
@@ -17,6 +18,9 @@ type State = {
 
 class CreatePollForm extends Component<Props, State> {
   lastCandidate = 0;
+
+  static contextType = IdentityContext;
+  context: LocalStoreIdentityService;
 
   constructor(props: Props) {
     super(props);
@@ -75,8 +79,9 @@ class CreatePollForm extends Component<Props, State> {
     event.preventDefault();
 
     createPoll(
+      this.context.getIdentity(),
       this.state.description,
-      this.state.candidates.map(c => c.value)
+      this.state.candidates.map(c => c.value),
     ).then(this.props.onCreatePoll);
   };
 
