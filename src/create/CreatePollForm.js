@@ -20,7 +20,7 @@ class CreatePollForm extends Component<Props, State> {
   lastCandidate = 0;
 
   static contextType = IdentityContext;
-  context: LocalStoreIdentityService;
+  context: IdentityService;
 
   constructor(props: Props) {
     super(props);

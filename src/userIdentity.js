@@ -39,6 +39,6 @@ export class LocalStoreIdentityService {
     }
 }
 
-const IdentityContext: Context<IdentityService> = React.createContext(new LocalStoreIdentityService())
+export const IdentityContext: Context<IdentityService> = React.createContext(new LocalStoreIdentityService())
 
 export default IdentityContext

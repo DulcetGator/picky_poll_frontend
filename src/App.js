@@ -21,21 +21,19 @@ class App extends Component<Props, State> {
 
   render() {
     return (
-      <IdentityContext.Provider value={this.state.identityService}>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          <Router>
-            <div>
-              <Route path="/create" component={CreatePollRoute} />
-              <Route path="/view/:pollId" component={PollDetailsRoute} />
-              <Route exact path="/" component={HomeRoute} />
-            </div>
-          </Router>
-        </div>
-      </IdentityContext.Provider>
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <Router>
+          <div>
+            <Route path="/create" component={CreatePollRoute} />
+            <Route path="/view/:pollId" component={PollDetailsRoute} />
+            <Route exact path="/" component={HomeRoute} />
+          </div>
+        </Router>
+      </div>
     );
   }
 }
