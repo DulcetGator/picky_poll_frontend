@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import type { Poll } from "../api";
+import type { Ballot, Poll } from "../api";
 import VoteForm from "./VoteForm";
+import BallotPreview from './BallotPreview'
 
 type Props = {
-  poll: Poll
+  poll: Poll,
+  ballots: Ballot[]
 };
 
 type State = {};
@@ -14,10 +16,20 @@ class ViewRetrievedPoll extends Component<Props, State> {
     this.state = {};
   }
 
+  ballots() {
+    let ballotPreviews = this.props.ballots.map(function(b: Ballot) {
+      return <li><BallotPreview ballot={b} /></li>
+    })
+    return <ul>
+      {ballotPreviews}
+    </ul>
+  }
+
   render() {
     return (
       <div>
         <p>{this.props.poll.description}</p>
+        {this.ballots()}
         <VoteForm
           candidates={this.props.poll.candidates}
           pollId={this.props.poll.id}
