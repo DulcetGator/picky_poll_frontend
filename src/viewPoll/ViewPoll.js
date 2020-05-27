@@ -3,6 +3,8 @@ import { getPoll } from "../api";
 import ViewRetrievedPoll from "./ViewRetrievedPoll";
 import type { Ballot, Poll } from "../api";
 
+import IdentityContext, {IdentityService} from "../userIdentity.js"
+
 type Props = {
   pollId: string
 };
@@ -13,6 +15,10 @@ type State = {
 };
 
 class ViewPoll extends Component<Props, State> {
+
+  static contextType = IdentityContext;
+  context: IdentityService
+
   constructor(props: Props) {
     super(props);
     this.state = { poll: null, ballots: [] };
@@ -32,6 +38,7 @@ class ViewPoll extends Component<Props, State> {
 
   async getPoll() {
     let response = await getPoll(this.props.pollId);
+    this.context.addKnownPoll(response.poll.id)
     this.setState({ poll: response.poll, ballots: response.ballots });
   }
 }

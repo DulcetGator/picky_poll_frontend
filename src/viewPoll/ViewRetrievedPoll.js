@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import type { Ballot, Poll } from "../api";
-import VoteForm from "./VoteForm";
+import EditBallot from "./EditBallot";
 import BallotPreview from './BallotPreview'
+import { IdentityContext, IdentityService } from "../userIdentity";
+
+let crypto = require('crypto')
 
 type Props = {
   poll: Poll,
@@ -11,6 +14,10 @@ type Props = {
 type State = {};
 
 class ViewRetrievedPoll extends Component<Props, State> {
+
+  static contextType = IdentityContext;
+  context: IdentityService
+
   constructor(props: Props) {
     super(props);
     this.state = {};
@@ -29,13 +36,21 @@ class ViewRetrievedPoll extends Component<Props, State> {
     return (
       <div>
         <p>{this.props.poll.description}</p>
+        <h1>Already voted:</h1>
         {this.ballots()}
-        <VoteForm
-          candidates={this.props.poll.candidates}
-          pollId={this.props.poll.id}
+        <h1>Cast your vote:</h1>
+        <EditBallot
+          poll={this.props.poll}
+          ballotKey={this.context.getKey()}
+          isNew={true}
+          onSubmitBallot={()=>{}}
         />
       </div>
     );
+  }
+
+  onSubmitNewBallot() {
+
   }
 }
 

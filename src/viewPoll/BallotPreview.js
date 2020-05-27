@@ -6,5 +6,7 @@ type BallotPreviewProps = {
 }
 
 export default function BallotPreview(props: BallotPreviewProps) {
-    return <p>{props.ballot.name}</p>
+    return <p>
+        {props.ballot.name}
+    </p>
 }

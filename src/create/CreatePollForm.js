@@ -79,7 +79,7 @@ class CreatePollForm extends Component<Props, State> {
     event.preventDefault();
 
     createPoll(
-      this.context.getIdentity(),
+      this.context.getKey(),
       this.state.description,
       this.state.candidates.map(c => c.value),
     ).then(this.props.onCreatePoll);

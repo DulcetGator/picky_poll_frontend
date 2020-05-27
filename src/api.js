@@ -1,10 +1,8 @@
-import {type Identity } from './userIdentity.js'
-
 export type Ballot = {
   name: string,
   id: string,
   rankings: string[],
-  timestamp: string
+  timestamp: number
 }
 
 export type Poll = {
@@ -18,11 +16,11 @@ export type GetPollResponse = {
   ballots: Ballot[]
 }
 
-function createPoll(identity: Identity, description: string, options: string[]) {
+async function createPoll(key: string, description: string, options: string[]) {
   return fetch("/api/polls", {
     headers: {
       "content-type": "application/json",
-      "X-VOTE-SECRET": identity.key
+      "X-VOTE-SECRET": key
     },
     method: "POST",
     body: JSON.stringify({
@@ -32,11 +30,11 @@ function createPoll(identity: Identity, description: string, options: string[]) 
   }).then(r => r.json());
 }
 
-function postBallot(identity: Identity, pollId: string, ballotId: string, name: string, rankings: string[]) {
+async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[]) {
   return fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
     headers: {
       "content-type": "application/json",
-      "X-VOTE-SECRET": identity.key
+      "X-VOTE-SECRET": key
     },
     method: "PUT",
     body: JSON.stringify({
