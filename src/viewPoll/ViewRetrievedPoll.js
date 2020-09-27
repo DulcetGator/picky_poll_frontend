@@ -24,9 +24,15 @@ class ViewRetrievedPoll extends Component<Props, State> {
   }
 
   ballots() {
-    let ballotPreviews = this.props.ballots.map(function(b: Ballot) {
-      return <li><BallotPreview ballot={b} /></li>
-    })
+    const myBallotIds = this.context.getKnownBallots(this.props.poll.id) || [];
+    const myBallots = this.props.ballots.filter(b =>
+      myBallotIds.indexOf(b.id) > -1
+    );
+
+    const ballotPreviews = this.props.ballots.map((b: Ballot) => 
+      <li id={`ballot-preview-${b.id}`}><BallotPreview ballot={b} /></li>
+    );
+
     return <ul>
       {ballotPreviews}
     </ul>
@@ -43,14 +49,17 @@ class ViewRetrievedPoll extends Component<Props, State> {
           poll={this.props.poll}
           ballotKey={this.context.getKey()}
           isNew={true}
-          onSubmitBallot={()=>{}}
+          onSubmitBallot={b=>this.onSubmitNewBallot(b)}
         />
       </div>
     );
   }
 
-  onSubmitNewBallot() {
-
+  onSubmitNewBallot(ballot: Ballot) {
+    this.context.addKnownBallot(
+      this.props.poll.id,
+      ballot.id
+    );
   }
 }
 

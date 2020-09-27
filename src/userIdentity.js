@@ -98,13 +98,10 @@ export class LocalStoreIdentityService implements IdentityService {
         let oldPoll = oldIdentity.knownPolls[oldPollIndex]
         let newPoll: KnownPoll = {
             pollId: oldPoll.pollId,
-            knownBallots: oldPoll.knownBallots.concat([pollId])
+            knownBallots: oldPoll.knownBallots.concat([ballotId])
         }
-        let newKnownPolls = oldIdentity.knownPolls.splice(oldPollIndex, 1, newPoll)
-        this._setIdentity({
-            key: oldIdentity.key,
-            knownPolls: newKnownPolls
-        })
+        oldIdentity.knownPolls[oldPollIndex]=newPoll
+        this._setIdentity(oldIdentity);
     }
 }
 

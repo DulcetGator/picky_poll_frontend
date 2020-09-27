@@ -11,7 +11,7 @@ type Props = {
   ballotKey: string,
   isNew: boolean,
 
-  onSubmitBallot: (() => void)
+  onSubmitBallot: (Ballot => void)
 };
 
 type State = {
@@ -69,7 +69,7 @@ class EditBallot extends Component<Props, State> {
       this.state.ballot.rankings
     );
 
-    this.props.onSubmitBallot()
+    this.props.onSubmitBallot(this.state.ballot)
   }
 
   makeNewBallot(): Ballot {
