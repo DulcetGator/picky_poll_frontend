@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import type { Ballot, Poll } from "../api";
-import EditBallot from "./EditBallot";
+import CreateBallot from "./CreateBallot";
 import BallotPreview from './BallotPreview'
+import MyBallotPreview from './MyBallotPreview'
 import { IdentityContext, IdentityService } from "../userIdentity";
 
 let crypto = require('crypto')
@@ -27,14 +28,25 @@ class ViewRetrievedPoll extends Component<Props, State> {
     const myBallotIds = this.context.getKnownBallots(this.props.poll.id) || [];
     const myBallots = this.props.ballots.filter(b =>
       myBallotIds.indexOf(b.id) > -1
+    ).map(b => 
+      <li key={b.id}>
+        <MyBallotPreview
+          poll = {this.props.poll}
+          ballotKey = {this.context.getKey()}
+          ballot = {b}
+        />
+      </li>
     );
 
-    const ballotPreviews = this.props.ballots.map((b: Ballot) => 
-      <li id={`ballot-preview-${b.id}`}><BallotPreview ballot={b} /></li>
+    const theirBallots = this.props.ballots.filter(b=> 
+      myBallotIds.indexOf(b.id) <= -1
+    ).map((b: Ballot) => 
+      <li key={b.id}><BallotPreview ballot={b} /></li>
     );
 
     return <ul>
-      {ballotPreviews}
+      {myBallots}
+      {theirBallots}
     </ul>
   }
 
@@ -45,7 +57,7 @@ class ViewRetrievedPoll extends Component<Props, State> {
         <h1>Already voted:</h1>
         {this.ballots()}
         <h1>Cast your vote:</h1>
-        <EditBallot
+        <CreateBallot
           poll={this.props.poll}
           ballotKey={this.context.getKey()}
           isNew={true}

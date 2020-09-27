@@ -1,12 +1,32 @@
 import React, { Component } from "react";
+import { IdentityContext, IdentityService } from '../userIdentity';
 import type { Ballot } from "../api";
 
-type BallotPreviewProps = {
-    ballot: Ballot
+type Props = {
+  ballot: Ballot
 }
 
-export default function BallotPreview(props: BallotPreviewProps) {
-    return <p>
-        {props.ballot.name}
-    </p>
+type State = {
+  editing: bool;
+}
+
+export default class BallotPreview extends Component<Props, State> {
+  static contextType = IdentityContext;
+  context: IdentityService
+
+  constructor(props: Props) {
+    super(props)
+
+    this.state = {
+      editing: false
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        {this.props.ballot.name}
+      </div>
+    );
+  }
 }
