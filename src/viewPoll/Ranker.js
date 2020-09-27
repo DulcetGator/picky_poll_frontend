@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import type { Ref } from "react";
 import "./Ranker.css";
 
 type CandidateProps = {

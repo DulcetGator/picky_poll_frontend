@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import type { Ref } from "react";
-import Ranker from "./Ranker";
-import type { Poll, Ballot} from "../api"
-import { postBallot } from "../api";
-import shuffle from '../util/shuffle'
+import Ranker from "../Ranker";
+import type { Poll, Ballot} from "../../api"
+import { postBallot } from "../../api";
+import shuffle from '../../util/shuffle'
 
 type Props = {
   poll: Poll,

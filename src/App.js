@@ -4,7 +4,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import CreatePollForm from "./create/CreatePollForm";
 import ViewPoll from "./viewPoll/ViewPoll";
-import IdentityContext, { LocalStoreIdentityService } from "./userIdentity.js";
+import { LocalStoreIdentityService } from "./userIdentity.js";
 
 type Props = {};
 type State = {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { createPoll } from "../api";
-import IdentityContext, {IdentityService, LocalStoreIdentityService} from "../userIdentity.js"
+import IdentityContext, {IdentityService} from "../userIdentity.js"
 
 type Props = {
   onCreatePoll: ({ id: string }) => void

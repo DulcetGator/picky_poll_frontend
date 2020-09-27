@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { IdentityContext, IdentityService } from '../userIdentity';
-import type { Ballot } from "../api";
+import { IdentityContext, IdentityService } from '../../userIdentity';
+import type { Ballot } from "../../api";
 
 type Props = {
   ballot: Ballot

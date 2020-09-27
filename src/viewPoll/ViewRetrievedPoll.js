@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import type { Ballot, Poll } from "../api";
-import CreateBallot from "./CreateBallot";
-import BallotPreview from './BallotPreview'
-import MyBallotPreview from './MyBallotPreview'
+import CreateBallot from "./ballot/CreateBallot";
+import BallotPreview from './ballot/BallotPreview'
+import MyBallotPreview from './ballot/MyBallotPreview'
 import { IdentityContext, IdentityService } from "../userIdentity";
-
-let crypto = require('crypto')
 
 type Props = {
   poll: Poll,
