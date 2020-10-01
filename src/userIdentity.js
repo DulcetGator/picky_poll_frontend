@@ -1,9 +1,9 @@
 import React, {type Context} from 'react'
-
+import { type Poll } from './api'
 let crypto = require('crypto')
 
 type KnownPoll = {
-    pollId: string,
+    poll: Poll,
     knownBallots: string[]
 }
 
@@ -14,10 +14,10 @@ type Identity = {
 
 export interface IdentityService {
     getKey(): string,
-    getKnownPolls(): string[],
+    getKnownPolls(): Poll[],
     getKnownBallots(pollId: string): ?string[],
 
-    addKnownPoll(pollId: string): void,
+    addKnownPoll(poll: Poll): void,
     addKnownBallot(pollId: string, ballotId: string): void,
 }
 
@@ -58,12 +58,12 @@ export class LocalStoreIdentityService implements IdentityService {
         return this._getIdentity().key
     }
 
-    getKnownPolls(): string[] {
-        return this._getIdentity().knownPolls.map(p => p.pollId)
+    getKnownPolls(): Poll[] {
+        return this._getIdentity().knownPolls.map(p => p.poll)
     }
 
     getKnownBallots(pollId: string): ?string[] {
-        let polls = this._getIdentity().knownPolls.filter(p => p.pollId === pollId)
+        let polls = this._getIdentity().knownPolls.filter(p => p.poll.id === pollId)
         if (polls.length > 0) {
             return polls[0].knownBallots
         } else {
@@ -71,13 +71,13 @@ export class LocalStoreIdentityService implements IdentityService {
         }
     }
 
-    addKnownPoll(pollId: string): void {
+    addKnownPoll(poll: Poll): void {
         let oldIdentity = this._getIdentity()
-        let desiredIndex = oldIdentity.knownPolls.findIndex(p => p.pollId >= pollId);
-        if (desiredIndex > -1 && oldIdentity.knownPolls[desiredIndex].pollId === pollId) {
+        let desiredIndex = oldIdentity.knownPolls.findIndex(p => p.poll.id >= poll.id);
+        if (desiredIndex > -1 && oldIdentity.knownPolls[desiredIndex].poll.id === poll.id) {
             return;
         } else {
-            let newPoll: KnownPoll = {pollId: pollId, knownBallots: []}
+            let newPoll: KnownPoll = {poll: poll, knownBallots: []}
             var newKnownPolls: KnownPoll[]
             if (desiredIndex < 0) {
                 newKnownPolls = oldIdentity.knownPolls.concat([newPoll])
@@ -94,10 +94,10 @@ export class LocalStoreIdentityService implements IdentityService {
 
     addKnownBallot(pollId: string, ballotId: string): void {
         let oldIdentity = this._getIdentity()
-        let oldPollIndex = oldIdentity.knownPolls.findIndex(p => p.pollId === pollId)
+        let oldPollIndex = oldIdentity.knownPolls.findIndex(p => p.poll.id === pollId)
         let oldPoll = oldIdentity.knownPolls[oldPollIndex]
         let newPoll: KnownPoll = {
-            pollId: oldPoll.pollId,
+            poll: oldPoll.poll,
             knownBallots: oldPoll.knownBallots.concat([ballotId])
         }
         oldIdentity.knownPolls[oldPollIndex]=newPoll

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
 import CreatePollForm from "./create/CreatePollForm";
+import Home from './home/Home'
 import ViewPoll from "./viewPoll/ViewPoll";
 import { LocalStoreIdentityService } from "./userIdentity.js";
 
@@ -27,11 +28,9 @@ class App extends Component<Props, State> {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <Router>
-          <div>
-            <Route path="/create" component={CreatePollRoute} />
-            <Route path="/view/:pollId" component={PollDetailsRoute} />
-            <Route exact path="/" component={HomeRoute} />
-          </div>
+          <Route path="/create" component={CreatePollRoute} />
+          <Route path="/view/:pollId" component={PollDetailsRoute} />
+          <Route exact path="/" component={HomeRoute} />
         </Router>
       </div>
     );
@@ -40,7 +39,7 @@ class App extends Component<Props, State> {
 
 class HomeRoute extends Component<{}, {}> {
   render() {
-    return <Redirect to="/create" />;
+    return <Home />
   }
 }
 

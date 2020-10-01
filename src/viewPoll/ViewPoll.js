@@ -38,8 +38,10 @@ class ViewPoll extends Component<Props, State> {
 
   async getPoll() {
     let response = await getPoll(this.props.pollId);
-    this.context.addKnownPoll(response.poll.id)
-    this.setState({ poll: response.poll, ballots: response.ballots });
+    if (response) {
+      this.context.addKnownPoll(response.poll)
+      this.setState({ poll: response.poll, ballots: response.ballots });
+    }
   }
 }
 
