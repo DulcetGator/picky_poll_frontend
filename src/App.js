@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
+import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
 import CreatePollForm from "./create/CreatePollForm";
@@ -23,14 +23,18 @@ class App extends Component<Props, State> {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
         <Router>
-          <Route path="/create" component={CreatePollRoute} />
-          <Route path="/view/:pollId" component={PollDetailsRoute} />
-          <Route exact path="/" component={HomeRoute} />
+          <header className="App-header">
+            <Link to="/">
+              <img src={logo} className="App-logo" alt="logo" />
+              <h1 className="App-title">Welcome to React</h1>
+            </Link>
+          </header>
+          <Switch>
+            <Route path="/create" component={CreatePollRoute} />
+            <Route path="/view/:pollId" component={PollDetailsRoute} />
+            <Route exact path="/" component={HomeRoute} />
+          </Switch>
         </Router>
       </div>
     );

@@ -9,6 +9,8 @@ export type Poll = {
   id: string,
   description: string,
   candidates: string[],
+  close: string,
+  expires: string
 };
 
 export type GetPollResponse = {
