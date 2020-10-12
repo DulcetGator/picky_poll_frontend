@@ -72,23 +72,18 @@ export class LocalStoreIdentityService implements IdentityService {
     }
 
     addKnownPoll(poll: Poll): void {
-        let oldIdentity = this._getIdentity()
-        let desiredIndex = oldIdentity.knownPolls.findIndex(p => p.poll.id >= poll.id);
-        if (desiredIndex > -1 && oldIdentity.knownPolls[desiredIndex].poll.id === poll.id) {
+        let identity = this._getIdentity()
+        let desiredIndex = identity.knownPolls.findIndex(p => p.poll.id >= poll.id);
+        if (desiredIndex > -1 && identity.knownPolls[desiredIndex].poll.id === poll.id) {
             return;
         } else {
             let newPoll: KnownPoll = {poll: poll, knownBallots: []}
-            var newKnownPolls: KnownPoll[]
             if (desiredIndex < 0) {
-                newKnownPolls = oldIdentity.knownPolls.concat([newPoll])
+                identity.knownPolls = identity.knownPolls.concat([newPoll])
             } else {
-                newKnownPolls = oldIdentity.knownPolls.splice(desiredIndex, 0, newPoll)
+                identity.knownPolls.splice(desiredIndex, 0, newPoll)
             }
-            let newIdentity: Identity = {
-                key: oldIdentity.key,
-                knownPolls: newKnownPolls
-            }
-            this._setIdentity(newIdentity)
+            this._setIdentity(identity)
         }
     }
 
