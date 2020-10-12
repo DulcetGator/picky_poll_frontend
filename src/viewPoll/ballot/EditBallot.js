@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, type Node } from "react";
 import Ranker from "../Ranker";
 import type { Poll, Ballot} from "../../api"
 import { postBallot } from "../../api";
@@ -26,7 +26,7 @@ class CreateBallot extends Component<Props, State> {
     };
   }
 
-  render() {
+  render(): Node {
     return (
       <form onSubmit={e => this.handleSubmit(e)}>
         <p>{this.props.ballot.name}</p>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, type Context, type Node } from "react";
 import { getPoll } from "../api";
 import ViewRetrievedPoll from "./ViewRetrievedPoll";
 import type { Ballot, Poll } from "../api";
@@ -16,7 +16,7 @@ type State = {
 
 class ViewPoll extends Component<Props, State> {
 
-  static contextType = IdentityContext;
+  static contextType: Context<IdentityService> = IdentityContext;
   context: IdentityService
 
   constructor(props: Props) {
@@ -28,7 +28,7 @@ class ViewPoll extends Component<Props, State> {
     this.getPoll();
   }
 
-  render() {
+  render(): Node {
     if (this.state.poll != null) {
       return <ViewRetrievedPoll poll={this.state.poll} ballots={this.state.ballots}/>;
     } else {

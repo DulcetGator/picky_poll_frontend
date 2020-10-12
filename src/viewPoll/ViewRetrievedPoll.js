@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, type Context, type Node } from "react";
 import type { Ballot, Poll } from "../api";
 import CreateBallot from "./ballot/CreateBallot";
 import BallotPreview from './ballot/BallotPreview'
@@ -14,7 +14,7 @@ type State = {};
 
 class ViewRetrievedPoll extends Component<Props, State> {
 
-  static contextType = IdentityContext;
+  static contextType: Context<IdentityService>  = IdentityContext;
   context: IdentityService
 
   constructor(props: Props) {
@@ -22,7 +22,7 @@ class ViewRetrievedPoll extends Component<Props, State> {
     this.state = {};
   }
 
-  ballots() {
+  ballots(): Node {
     const myBallotIds = this.context.getKnownBallots(this.props.poll.id) || [];
     const myBallots = this.props.ballots.filter(b =>
       myBallotIds.indexOf(b.id) > -1
@@ -48,7 +48,7 @@ class ViewRetrievedPoll extends Component<Props, State> {
     </ul>
   }
 
-  render() {
+  render(): Node {
     return (
       <div>
         <p>{this.props.poll.description}</p>

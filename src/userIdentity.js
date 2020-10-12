@@ -32,7 +32,7 @@ export class LocalStoreIdentityService implements IdentityService {
             let identity = JSON.parse(identityStr)
             return identity
         } catch(e) {
-            console.log(e)
+            console.error(e)
             return this._generateIdentity()
         }
     }

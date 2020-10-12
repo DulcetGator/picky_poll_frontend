@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, type Node } from "react";
 import "./Ranker.css";
 
 type CandidateProps = {
@@ -21,7 +21,7 @@ class Candidate extends Component<CandidateProps, CandidateState> {
     };
   }
 
-  render() {
+  render(): Node {
     let bottomMarkerClass = this.props.bottomMarker ? "bottom-marker " : "";
     return (
       <div className={"candidate-wrapper " + bottomMarkerClass}>
@@ -57,9 +57,9 @@ class Candidate extends Component<CandidateProps, CandidateState> {
     }
   }
 
-  wasDragged(e: DragEvent) {
+  wasDragged(e: DragEvent): bool {
     return (
-      e.dataTransfer && e.dataTransfer.getData("candidate") === this.props.name
+      (!!e.dataTransfer) && e.dataTransfer.getData("candidate") === this.props.name
     );
   }
 }
@@ -81,7 +81,7 @@ class Ranker extends Component<Props, State> {
     this.state = {};
   }
 
-  render() {
+  render(): Node {
     return (
       <div
         className="candidate-list"
@@ -127,7 +127,7 @@ class Ranker extends Component<Props, State> {
 
   onStopDraggingCandidate(candidateIndex: number, e: MouseEvent) {}
 
-  getNewPosition(e: DragEvent) {
+  getNewPosition(e: DragEvent): number {
     let centerYs = this.candidateRefs.map(r => {
       if (r != null) {
         return r.getCenter().y;

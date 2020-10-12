@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {type Node} from 'react'
 import { Link } from 'react-router-dom'
 import { ListPolls } from '../listPolls/ListPolls'
 
-export default function Home() {
+export default function Home(): Node {
   return (
     <div>
       <ListPolls />

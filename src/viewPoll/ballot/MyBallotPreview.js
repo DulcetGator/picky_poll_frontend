@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, type Node } from "react";
 import type { Poll, Ballot} from "../../api"
 import EditBallot from './EditBallot'
 
@@ -49,7 +49,7 @@ export default class MyBallotPreview extends Component<Props, State> {
     this.setState({isEditing: true});
   }
 
-  render() {
+  render(): Node {
     if (this.state.isEditing) {
       return <EditBallot
         poll={this.props.poll}

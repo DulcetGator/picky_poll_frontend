@@ -18,7 +18,7 @@ export type GetPollResponse = {
   ballots: Ballot[]
 }
 
-async function createPoll(key: string, description: string, options: string[]) {
+async function createPoll(key: string, description: string, options: string[]): Promise<Poll> {
   return fetch("/api/polls", {
     headers: {
       "content-type": "application/json",
@@ -32,7 +32,8 @@ async function createPoll(key: string, description: string, options: string[]) {
   }).then(r => r.json());
 }
 
-async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[]) {
+async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[])
+: Promise<Response> {
   return fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
     headers: {
       "content-type": "application/json",

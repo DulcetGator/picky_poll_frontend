@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, type Context, type Node } from 'react'
 import { Link } from 'react-router-dom'
 import { type GetPollResponse, type Poll, getPoll } from '../api'
 import { IdentityContext, IdentityService } from '../userIdentity'
@@ -19,7 +19,7 @@ function PollPreview(props: {poll: Poll}) {
 }
 
 export class ListPolls extends Component<Props, State> {
-  static contextType = IdentityContext;
+  static contextType: Context<IdentityService> = IdentityContext;
   context: IdentityService
 
   constructor(props: Props) {
@@ -41,7 +41,7 @@ export class ListPolls extends Component<Props, State> {
     this.context.getKnownPolls().forEach(p => this.confirmPoll(p.id));
   }
 
-  render() {
+  render(): Node {
     return (
       <ul>
         {this.state.polls.map(p =>

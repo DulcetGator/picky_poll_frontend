@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, type Context, type Node } from "react";
 import { IdentityContext, IdentityService } from '../../userIdentity';
 import type { Ballot } from "../../api";
 
@@ -11,7 +11,7 @@ type State = {
 }
 
 export default class BallotPreview extends Component<Props, State> {
-  static contextType = IdentityContext;
+  static contextType: Context<IdentityService> = IdentityContext;
   context: IdentityService
 
   constructor(props: Props) {
@@ -22,7 +22,7 @@ export default class BallotPreview extends Component<Props, State> {
     };
   }
 
-  render() {
+  render(): Node {
     return (
       <div>
         {this.props.ballot.name}
