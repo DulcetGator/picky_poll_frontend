@@ -4,6 +4,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Home from './home/Home'
 import ViewPoll from './viewPoll/ViewPoll'
+import CreatePollForm from './create/CreatePollForm'
 import { LocalStoreIdentityService } from "./userIdentity";
 
 type Props = {};
@@ -57,7 +58,9 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
     return this.state.poll ? (
       <Redirect to={`/view/${this.state.poll.id}`} push={true} />
     ) : (
-      <p>CreatePollForm placeholder</p>
+      <CreatePollForm onCreatePoll={p => {
+        this.setState({ poll: p });
+      }}/>
     );
   }
 }
