@@ -1,26 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
+import logo from "./logo.svg";
+import "./App.css";
+import Home from './home/Home'
+import { LocalStoreIdentityService } from "./userIdentity";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+type Props = {};
+type State = {
+  identityService: LocalStoreIdentityService
 }
+
+class App extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      identityService: new LocalStoreIdentityService()
+    }
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Router>
+          <header className="App-header">
+            <Link to="/">
+              <img src={logo} className="App-logo" alt="logo" />
+              <h1 className="App-title">Welcome to React</h1>
+            </Link>
+          </header>
+          <Switch>
+            <Route path="/create" component={CreatePollRoute} />
+            <Route path="/view/:pollId" component={PollDetailsRoute} />
+            <Route exact path="/" component={HomeRoute} />
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
+}
+
+class HomeRoute extends Component<{}, {}> {
+  render() {
+    return <Home />
+  }
+}
+
+class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
+  constructor(props: {}) {
+    super(props);
+
+    this.state = { poll: undefined };
+  }
+
+  render() {
+    return this.state.poll ? (
+      <Redirect to={`/view/${this.state.poll.id}`} push={true} />
+    ) : (
+      <p>CreatePollForm placeholder</p>
+    );
+  }
+}
+
+const PollDetailsRoute = ({ /*match*/ }) => {
+  return <p>ViewPoll placeholder</p>
+};
 
 export default App;
