@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-ro
 import logo from "./logo.svg";
 import "./App.css";
 import Home from './home/Home'
+import ViewPoll from './viewPoll/ViewPoll'
 import { LocalStoreIdentityService } from "./userIdentity";
 
 type Props = {};
@@ -61,8 +62,8 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
   }
 }
 
-const PollDetailsRoute = ({ /*match*/ }) => {
-  return <p>ViewPoll placeholder</p>
+const PollDetailsRoute = ({ match: {params: {pollId} } }: {match: {params: {pollId: string }}}) => {
+  return <ViewPoll pollId={pollId} />
 };
 
 export default App;
