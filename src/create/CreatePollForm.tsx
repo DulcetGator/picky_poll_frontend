@@ -1,6 +1,8 @@
 import React, { Component, Context } from "react";
+import { Button, Col, Form, FormControl, InputGroup, Row } from 'react-bootstrap'
 import { createPoll } from "../api";
 import IdentityContext, {IdentityService} from "../userIdentity"
+import './CreatePollForm.css'
 
 type Props = {
   onCreatePoll: ({ id } : {id: string}) => void
@@ -34,43 +36,67 @@ class CreatePollForm extends Component<Props, State> {
   render() {
     let answers = this.state.candidates.map((candidate, index) => (
       <li key={candidate.key}>
-        <input
-          onChange={e => this.handleCandidateChange(index, e)}
-          type="text"
-          placeholder={"Candidate " + (index + 1)}
-        />
-        <button type="button" onClick={e => this.handleDeleteCandidate(index, e)}>
-          Delete
-        </button>
+          <InputGroup>
+            <FormControl
+              onChange={e => this.handleCandidateChange(index, e.currentTarget.value)}
+              placeholder={"Choice #" + (index + 1)}
+            />
+          <InputGroup.Append>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={e => this.handleDeleteCandidate(index)} >
+              Remove
+            </Button>
+          </InputGroup.Append>
+        </InputGroup>
       </li>
     ));
 
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
-        <p>
-          <label>
-            Question:
-            <textarea
-              value={this.state.description}
-              onChange={e => this.handleDescriptionChange(e)}
-            />
-          </label>
-        </p>
-        <ul>{answers}</ul>
-        <p>
-          <button type="button" onClick={e => this.handleCreateCandidate(e)}>
-            New Choice
-          </button>
-        </p>
-        <button type="submit">Create</button>
-      </form>
+      <div className="CreatePollForm" >
+        <form onSubmit={e => this.handleSubmit(e)}>
+          <p>
+            <Form.Group as={Row} controlId="DescriptionInput">
+              <Form.Label column sm="auto">
+                Question
+              </Form.Label>
+              <Col>
+                <FormControl
+                  as="textarea"
+                  placeholder="What is your preference among the following choices?"
+                  value={this.state.description}
+                  onChange={e => this.handleDescriptionChange(e.currentTarget.value)}
+                />
+              </Col>
+            </Form.Group>
+          </p>
+          <ul>{answers}</ul>
+          <div className="form-controls">
+            <div>
+              <Button
+                variant="secondary"
+                type="button"
+                onClick={e => this.handleCreateCandidate()} >
+                New Choice
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="primary"
+                type="submit">
+                Create
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     );
   }
 
-  handleDescriptionChange(event: React.FormEvent<HTMLTextAreaElement>) {
-    event.preventDefault();
+  handleDescriptionChange(newDescription: string) {
     this.setState({
-      description: event.currentTarget.value
+      description: newDescription
     });
   };
 
@@ -84,10 +110,10 @@ class CreatePollForm extends Component<Props, State> {
     ).then(this.props.onCreatePoll);
   };
 
-  handleCandidateChange (index: number, event: React.FormEvent<HTMLInputElement>): void {
+  handleCandidateChange (index: number, newName: string): void {
     let changedCandidate = {
       key: this.state.candidates[index].key,
-      value: event.currentTarget.value
+      value: newName
     };
     let newCandidates = this.state.candidates
       .slice(0, index)
@@ -96,7 +122,7 @@ class CreatePollForm extends Component<Props, State> {
     this.setState({ candidates: newCandidates });
   };
 
-  handleCreateCandidate(event: React.FormEvent<HTMLButtonElement>) {
+  handleCreateCandidate() {
     this.setState({
       candidates: this.state.candidates.concat([
         {
@@ -107,7 +133,7 @@ class CreatePollForm extends Component<Props, State> {
     });
   };
 
-  handleDeleteCandidate(index: number, event: React.FormEvent<HTMLButtonElement>): void {
+  handleDeleteCandidate(index: number): void {
     let newCandidates = this.state.candidates
       .slice(0, index)
       .concat(this.state.candidates.slice(index + 1));

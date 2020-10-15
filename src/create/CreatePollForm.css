@@ -1,0 +1,16 @@
+.CreatePollForm {
+  max-width: 40em;
+  margin: 1em auto 0em auto;
+}
+
+.form-controls {
+  flex-direction: column;
+  align-items: stretch;
+  margin: auto;
+  width: 10em;
+}
+
+.form-controls .btn {
+  width: 100%;
+  margin: 0.5em;
+}
