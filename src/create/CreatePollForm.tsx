@@ -56,21 +56,19 @@ class CreatePollForm extends Component<Props, State> {
     return (
       <div className="CreatePollForm" >
         <form onSubmit={e => this.handleSubmit(e)}>
-          <p>
-            <Form.Group as={Row} controlId="DescriptionInput">
-              <Form.Label column sm="auto">
-                Question
-              </Form.Label>
-              <Col>
-                <FormControl
-                  as="textarea"
-                  placeholder="What is your preference among the following choices?"
-                  value={this.state.description}
-                  onChange={e => this.handleDescriptionChange(e.currentTarget.value)}
-                />
-              </Col>
-            </Form.Group>
-          </p>
+          <Form.Group as={Row} controlId="DescriptionInput">
+            <Form.Label column sm="auto">
+              Question
+            </Form.Label>
+            <Col>
+              <FormControl
+                as="textarea"
+                placeholder="What is your preference among the following choices?"
+                value={this.state.description}
+                onChange={e => this.handleDescriptionChange(e.currentTarget.value)}
+              />
+            </Col>
+          </Form.Group>
           <ul>{answers}</ul>
           <div className="form-controls">
             <div>
@@ -100,14 +98,18 @@ class CreatePollForm extends Component<Props, State> {
     });
   };
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    createPoll(
+    let poll = await createPoll(
       this.context.getKey(),
       this.state.description,
       this.state.candidates.map(c => c.value),
-    ).then(this.props.onCreatePoll);
+    );
+
+    this.context.addKnownPoll(poll, true);
+    
+    this.props.onCreatePoll(poll);
   };
 
   handleCandidateChange (index: number, newName: string): void {

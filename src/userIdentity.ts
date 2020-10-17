@@ -2,8 +2,9 @@ import React, { Context } from 'react'
 import { Poll } from './api'
 let crypto = require('crypto')
 
-type KnownPoll = {
+export type KnownPoll = {
     poll: Poll,
+    isMine: boolean,
     knownBallots: string[]
 }
 
@@ -14,10 +15,11 @@ type Identity = {
 
 export interface IdentityService {
     getKey(): string,
-    getKnownPolls(): Poll[],
+
+    getKnownPolls(): KnownPoll[],
     getKnownBallots(pollId: string): string[] | null,
 
-    addKnownPoll(poll: Poll): void,
+    addKnownPoll(poll: Poll, isMine: boolean): void,
     addKnownBallot(pollId: string, ballotId: string): void,
 }
 
@@ -58,8 +60,8 @@ export class LocalStoreIdentityService implements IdentityService {
         return this._getIdentity().key
     }
 
-    getKnownPolls(): Poll[] {
-        return this._getIdentity().knownPolls.map(p => p.poll)
+    getKnownPolls(): KnownPoll[] {
+        return this._getIdentity().knownPolls
     }
 
     getKnownBallots(pollId: string): string[] | null {
@@ -71,13 +73,13 @@ export class LocalStoreIdentityService implements IdentityService {
         }
     }
 
-    addKnownPoll(poll: Poll): void {
+    addKnownPoll(poll: Poll, isMine: boolean): void {
         let identity = this._getIdentity()
         let desiredIndex = identity.knownPolls.findIndex(p => p.poll.id >= poll.id);
         if (desiredIndex > -1 && identity.knownPolls[desiredIndex].poll.id === poll.id) {
             return;
         } else {
-            let newPoll: KnownPoll = {poll: poll, knownBallots: []}
+            let newPoll: KnownPoll = {poll, isMine, knownBallots: []}
             if (desiredIndex < 0) {
                 identity.knownPolls = identity.knownPolls.concat([newPoll])
             } else {
@@ -93,6 +95,7 @@ export class LocalStoreIdentityService implements IdentityService {
         let oldPoll = oldIdentity.knownPolls[oldPollIndex]
         let newPoll: KnownPoll = {
             poll: oldPoll.poll,
+            isMine: oldPoll.isMine,
             knownBallots: oldPoll.knownBallots.concat([ballotId])
         }
         oldIdentity.knownPolls[oldPollIndex]=newPoll

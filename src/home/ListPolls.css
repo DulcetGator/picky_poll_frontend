@@ -1,0 +1,20 @@
+.ListPolls {
+  max-width: 50em;
+  margin: auto;
+}
+
+.ListPolls ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ListPolls li {
+  margin: 1em;
+}
+
+.ListPolls a {
+  color: inherit; 
+}
+.ListPolls a:hover {
+  text-decoration: none;
+}

@@ -1,21 +1,12 @@
 import React, { Component, Context } from 'react'
-import { Link } from 'react-router-dom'
-import { GetPollResponse, Poll, getPoll } from '../api'
-import { IdentityContext, IdentityService } from '../userIdentity'
+import { IdentityContext, IdentityService, KnownPoll } from '../userIdentity'
+import { PollPreview } from './PollPreview'
+import './ListPolls.css'
 
 type Props = { }
-type State = {
-  polls: Poll[]
-}
-
-function PollPreview(props: {poll: Poll}) {
-  return (
-    <Link to={`/view/${props.poll.id}`} >
-      <p>
-        {props.poll.description}
-      </p>
-    </Link>
-  );
+type State = { 
+  myPolls: KnownPoll[],
+  seenPolls: KnownPoll[]
 }
 
 export class ListPolls extends Component<Props, State> {
@@ -25,29 +16,45 @@ export class ListPolls extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      polls: []
-    }
-  }
-
-  async confirmPoll(pollId: string) {
-    const response = await getPoll(pollId);
-    if (response) {
-      const polls = [response.poll].concat(this.state.polls)//.sort(p => p.poll.id);
-      await this.setState(Object.assign({}, this.state, {polls: polls}));
+      myPolls: [],
+      seenPolls: [],
     }
   }
 
   componentDidMount() {
-    this.context.getKnownPolls().forEach(p => this.confirmPoll(p.id));
+    const allKnownPolls = this.context.getKnownPolls()
+    const myPolls = allKnownPolls.filter(kp => kp.isMine)
+    const seenPolls = allKnownPolls.filter(kp => !kp.isMine)
+
+    this.setState({
+      myPolls: myPolls,
+      seenPolls: seenPolls
+    })
+  }
+
+  pollsSublist(title: string, knownPollsSubset: KnownPoll[]) {
+    if (knownPollsSubset.length === 0) {
+      return <></>
+    } else {
+      return <>
+        <h2>{title}</h2>
+        <ul>
+          {knownPollsSubset.map(kp =>
+            <li key={kp.poll.id}>
+              <PollPreview knownPoll={kp} />
+            </li>
+          )}
+        </ul>
+      </>
+    }
   }
 
   render() {
     return (
-      <ul>
-        {this.state.polls.map(p =>
-          <li key={p.id}><PollPreview poll={p} /></li>
-        )}
-      </ul>
+      <div className="ListPolls">
+        {this.pollsSublist("Polls you manage", this.state.myPolls)}
+        {this.pollsSublist("Polls you've viewed", this.state.seenPolls)}
+      </div>
     )
   }
 }
