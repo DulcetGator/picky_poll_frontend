@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
+import { Card } from 'react-bootstrap'
 import "./Ranker.css";
 
 type CandidateProps = {
@@ -31,7 +32,9 @@ class Candidate extends Component<CandidateProps, CandidateState> {
           draggable
           onDragStart={e => this.onDragStart(e)}
         >
-          {this.props.name}
+          <Card>
+            {this.props.name}
+          </Card>
         </div>
       </div>
     );
@@ -90,6 +93,7 @@ class Ranker extends Component<Props, State> {
       >
         {this.props.candidates.map((candidate: string, index: number) => (
           <Candidate
+            key={candidate}
             name={candidate}
             bottomMarker={true}
             ref={c => this.candidateRefs[index]=c}

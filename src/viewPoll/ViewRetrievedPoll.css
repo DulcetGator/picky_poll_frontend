@@ -1,0 +1,16 @@
+.my-ballot-item {
+  width: 15em;
+  margin: 1em auto;
+}
+
+.my-ballots-list,.their-ballots-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.their-ballot-item {
+  /* flex: 1 1 0; */
+  min-width: 15em;
+  margin: 1em;
+}

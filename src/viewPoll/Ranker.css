@@ -2,19 +2,26 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 20em;
 }
 
-.candidate {
+/* .candidate {
   border-style: solid;
   border-color: #000000;
   border-width: 1px;
   margin: 0.5em 0;
   height: 5em;
+} */
+
+.candidate {
+  cursor: move;
+  margin: 0.5em;
 }
 
-.candidate-wrapper.bottom-marker {
+.candidate .card {
+  padding: 0.5em;
+}
+/* .candidate-wrapper.bottom-marker {
   content: "<div />";
   border-bottom-style: solid;
   padding: 0.5em 0;
-}
+} */

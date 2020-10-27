@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, Card } from 'react-bootstrap'
 import Ranker from "../Ranker";
 import { Poll, Ballot} from "../../api"
 import { postBallot } from "../../api";
@@ -28,14 +29,22 @@ class CreateBallot extends Component<Props, State> {
 
   render() {
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
-        <p>{this.props.ballot.name}</p>
-        <Ranker
-          candidates={this.state.rankings}
-          onUpdateCandidates={e => this.handleUpdateCandidates(e)}
-        />
-        <button type="submit">Submit Changes</button>
-      </form>
+      <Card>
+        <Card.Header>
+          {this.props.ballot.name}
+        </Card.Header>
+        <Card.Body>
+          <Ranker
+            candidates={this.state.rankings}
+            onUpdateCandidates={e => this.handleUpdateCandidates(e)}
+          />
+          <Button
+            variant="primary"
+            onClick={e => this.handleSubmit(e)} >
+              Submit Changes
+          </Button>
+        </Card.Body>
+      </Card>
     );
   }
 

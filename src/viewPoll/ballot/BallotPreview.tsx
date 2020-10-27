@@ -1,13 +1,15 @@
-import React, { Component, Context } from "react";
-import { IdentityContext, IdentityService } from '../../userIdentity';
-import { Ballot } from "../../api";
+import React, { Component, Context } from 'react'
+import { Card } from 'react-bootstrap'
+import { IdentityContext, IdentityService } from '../../userIdentity'
+import { Ballot } from "../../api"
+
+import "./BallotPreview.css"
 
 type Props = {
   ballot: Ballot
 }
 
 type State = {
-  editing: boolean;
 }
 
 export default class BallotPreview extends Component<Props, State> {
@@ -18,15 +20,26 @@ export default class BallotPreview extends Component<Props, State> {
     super(props)
 
     this.state = {
-      editing: false
     };
   }
 
   render() {
+    const rankedItems = this.props.ballot.rankings.map(r =>
+      <li key={r}>
+        {r}
+      </li>
+    )
     return (
-      <div>
-        {this.props.ballot.name}
-      </div>
+      <Card className="BallotPreview">
+        <Card.Header>
+          {this.props.ballot.name}
+        </Card.Header>
+        <Card.Body>
+          <ol className="ranked-items">
+            {rankedItems}
+          </ol>
+        </Card.Body>
+      </Card>
     );
   }
 }

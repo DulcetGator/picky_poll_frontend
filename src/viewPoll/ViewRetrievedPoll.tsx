@@ -1,9 +1,11 @@
 import React, { Component, Context } from "react";
+import { Card } from 'react-bootstrap'
 import { Ballot, Poll } from "../api";
 import CreateBallot from "./ballot/CreateBallot";
 import BallotPreview from './ballot/BallotPreview'
 import MyBallotPreview from './ballot/MyBallotPreview'
 import { IdentityContext, IdentityService } from "../userIdentity";
+import './ViewRetrievedPoll.css'
 
 type Props = {
   poll: Poll,
@@ -27,7 +29,7 @@ class ViewRetrievedPoll extends Component<Props, State> {
     const myBallots = this.props.ballots.filter(b =>
       myBallotIds.indexOf(b.id) > -1
     ).map(b => 
-      <li key={b.id}>
+      <li className="my-ballot-item" key={b.id}>
         <MyBallotPreview
           poll = {this.props.poll}
           ballotKey = {this.context.getKey()}
@@ -39,22 +41,34 @@ class ViewRetrievedPoll extends Component<Props, State> {
     const theirBallots = this.props.ballots.filter(b=> 
       myBallotIds.indexOf(b.id) <= -1
     ).map((b: Ballot) => 
-      <li key={b.id}><BallotPreview ballot={b} /></li>
+      <li className="their-ballot-item" key={b.id}>
+        <BallotPreview ballot={b} />
+      </li>
     );
 
-    return <ul>
-      {myBallots}
-      {theirBallots}
-    </ul>
+    const myBallotsList = myBallots.length > 0
+    ? <ul className="my-ballots-list">{myBallots}</ul>
+    : <></>
+
+    const theirBallotsList = theirBallots.length > 0
+    ? <ul className="their-ballots-list">{theirBallots}</ul>
+    : <></>
+
+    return (
+      <>
+        {myBallotsList}
+        {theirBallotsList}
+      </>
+    );
   }
 
   render() {
     return (
       <div>
-        <p>{this.props.poll.description}</p>
-        <h1>Already voted:</h1>
+        <h1>{this.props.poll.description}</h1>
+        <h2>Already voted:</h2>
         {this.ballots()}
-        <h1>Cast your vote:</h1>
+        <h2>Cast your vote:</h2>
         <CreateBallot
           poll={this.props.poll}
           ballotKey={this.context.getKey()}

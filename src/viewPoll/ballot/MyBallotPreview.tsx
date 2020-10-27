@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { Button, Card } from 'react-bootstrap'
 import { Poll, Ballot} from "../../api"
 import EditBallot from './EditBallot'
+
+import './MyBallotPreview.css'
 
 type MyBallotReadOnlyProps = {
   ballot: Ballot,
@@ -13,13 +16,19 @@ function MyBallotReadOnly(props: MyBallotReadOnlyProps) {
   );
 
   return (
-    <div>
-      <h1>{props.ballot.name}</h1>
-      <ol>
-        {rankings}
-      </ol>
-      <button onClick={() => props.onEdit()}>Edit</button>
-    </div>
+    <Card className="MyBallotPreview">
+      <Card.Header>
+        {props.ballot.name}
+      </Card.Header>
+      <Card.Body>
+        <ol>
+          {rankings}
+        </ol>
+        <Button variant="outline-primary" onClick={() => props.onEdit()}>
+          Edit
+        </Button>
+      </Card.Body>
+    </Card>
   );
 }
 
