@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
 import { Card } from 'react-bootstrap'
+import {shallowArrayEq} from '../util/array'
 import "./Ranker.css";
 
 type CandidateProps = {
   name: string,
-  bottomMarker: boolean,
-  onStopDragging: (e: MouseEvent) => void
+  onDrag: (dragInfo: CandidateDragInfo) => void,
+  onDragEnd: () => void
+  onProvideY: (y: number) => void
 };
 
 type CandidateState = {
-  isDragging: boolean
 };
+
+type CandidateDragInfo = {
+  y: number
+}
 
 class Candidate extends Component<CandidateProps, CandidateState> {
   card: HTMLElement | null = null;
@@ -18,20 +23,18 @@ class Candidate extends Component<CandidateProps, CandidateState> {
   constructor(props: CandidateProps) {
     super(props);
     this.state = {
-      isDragging: false
     };
   }
 
   render() {
-    let bottomMarkerClass = this.props.bottomMarker ? "bottom-marker " : "";
     return (
-      <div className={"candidate-wrapper " + bottomMarkerClass}>
+      <div className={"candidate-wrapper"}>
         <div
           className={"candidate"}
           ref={c => this.card=c}
           draggable
-          onDragStart={e => this.onDragStart(e)}
-        >
+          onDrag={e => this.onDrag(e)} 
+          onDragEnd={e => this.onDragEnd(e)}>
           <Card>
             {this.props.name}
           </Card>
@@ -40,30 +43,37 @@ class Candidate extends Component<CandidateProps, CandidateState> {
     );
   }
 
-  getCenter(): { x: number, y: number } {
+  getCenter(): { y: number } {
     let current = this.card;
     if (current != null) {
       let boundingRect = current.getBoundingClientRect();
-      let x = boundingRect.left + boundingRect.width / 2;
       let y = boundingRect.top + boundingRect.height / 2;
-      return { x: x, y: y };
+      return { y: y };
     } else {
       throw new Error("Ref not set");
     }
   }
 
-  onDragStart(e: React.DragEvent) {
-    if (e.dataTransfer) {
-      e.dataTransfer.setData("candidate", this.props.name);
-    } else {
-      throw Error("No dataTransfer");
+  onDrag(e: React.DragEvent) {
+    e.preventDefault()
+    if (e.clientY != 0) {
+      const info = {y: e.clientY}
+      this.props.onDrag(info)
     }
   }
 
-  wasDragged(e: React.DragEvent): boolean {
-    return (
-      (!!e.dataTransfer) && e.dataTransfer.getData("candidate") === this.props.name
-    );
+  onDragEnd(e: React.DragEvent) {
+    e.dataTransfer.dropEffect = 'link'
+    e.preventDefault();
+    this.props.onDragEnd()
+  }
+
+  componentDidMount() {
+    this.props.onProvideY(this.getCenter().y)
+  }
+
+  componentDidUpdate() {
+    this.props.onProvideY(this.getCenter().y)
   }
 }
 
@@ -72,79 +82,84 @@ type Props = {
   onUpdateCandidates: (cs: string[]) => void
 };
 
-type State = {};
+type RankerCandidateRef = {
+  name: string,
+  yPos: number,
+}
+type State = {
+  candidatesFromProps: string[],
+  orderedCandidates: RankerCandidateRef[]
+}
 
 class Ranker extends Component<Props, State> {
-  candidateRefs: (Candidate | null)[];
 
   constructor(props: Props) {
     super(props);
-    let rankedCandidates = props.candidates.slice(0);
-    this.candidateRefs = rankedCandidates.map(_ => null);
-    this.state = {};
+    this.state = this.getStateFromProps();
+  }
+
+  componentDidUpdate() {
+    if (!shallowArrayEq(this.state.candidatesFromProps, this.props.candidates)) {
+      this.setState(this.getStateFromProps())
+    }
+  }
+
+  getStateFromProps(): State {
+    const candidates = this.props.candidates.map(c => {
+      return {
+        name: c,
+        yPos: 0,
+      }
+    })
+    return {
+      candidatesFromProps: this.props.candidates,
+      orderedCandidates: candidates
+    }
+  }
+
+  onDragCandidate(key: string, dragInfo: CandidateDragInfo) {
+    const oldIndex = this.state.orderedCandidates.findIndex(c => c.name == key)
+    var newIndex = this.state.orderedCandidates.findIndex(c => c.yPos > dragInfo.y)
+    if (newIndex < 0) {
+      newIndex = this.state.orderedCandidates.length - 1
+    }
+
+    if (oldIndex != newIndex) {
+      const nextState = this.getNextState(oldIndex, newIndex)
+      this.setState(nextState)
+    }
+  }
+
+  getNextState(oldIndex: number, newIndex: number): {orderedCandidates: RankerCandidateRef[]} {
+    const candidates = this.state.orderedCandidates
+
+    const order = [...this.state.orderedCandidates]
+    order.splice(newIndex, 0, order.splice(oldIndex, 1)[0])
+    return {
+      orderedCandidates: order
+    }
   }
 
   render() {
     return (
-      <div
-        className="candidate-list"
-        onDrop={e => this.onDrop(e)}
-        onDragOver={e => e.preventDefault()}
-      >
-        {this.props.candidates.map((candidate: string, index: number) => (
+      <div className="candidate-list" >
+        {this.state.orderedCandidates.map((candidate: {name: string, yPos: number}) => (
           <Candidate
-            key={candidate}
-            name={candidate}
-            bottomMarker={true}
-            ref={c => this.candidateRefs[index]=c}
-            onStopDragging={e => {
-              this.onStopDraggingCandidate(index, e);
-            }}
+            key={candidate.name}
+            name={candidate.name}
+            onDrag={(d) => this.onDragCandidate(candidate.name, d)}
+            onDragEnd={() => this.onCandidateDrop()}
+            onProvideY={y =>
+              candidate.yPos = y
+            }
           />
         ))}
       </div>
     );
   }
 
-  onDrop(e: React.DragEvent) {
-    let draggedFromIndex = this.candidateRefs.findIndex(
-      c => c!= null && c.wasDragged(e)
-    );
-    if (draggedFromIndex >= 0) {
-      let draggedToIndex = this.getNewPosition(e);
-      let remainingCandidates = this.props.candidates
-        .slice(0, draggedFromIndex)
-        .concat(this.props.candidates.slice(draggedFromIndex + 1));
-      remainingCandidates.splice(
-        draggedToIndex <= draggedFromIndex
-          ? draggedToIndex
-          : draggedToIndex - 1,
-        0,
-        this.props.candidates[draggedFromIndex]
-      );
-      this.props.onUpdateCandidates(remainingCandidates);
-    } else {
-      console.log("something else dropped.");
-      console.log(e.target);
-    }
-  }
-
-  onStopDraggingCandidate(candidateIndex: number, e: MouseEvent) {}
-
-  getNewPosition(e: React.DragEvent): number {
-    let centerYs = this.candidateRefs.map(r => {
-      if (r != null) {
-        return r.getCenter().y;
-      } else {
-        throw new Error("");
-      }
-    });
-
-    let firstIndex = centerYs.findIndex(y => e.clientY < y);
-    if (firstIndex < 0) {
-      return centerYs.length;
-    }
-    return firstIndex;
+  onCandidateDrop() {
+    this.props.onUpdateCandidates(this.state.orderedCandidates.map(c => c.name))
   }
 }
 
