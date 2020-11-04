@@ -1,5 +1,4 @@
 import React, { Component, Context } from "react";
-import { Card } from 'react-bootstrap'
 import { Ballot, Poll } from "../api";
 import CreateBallot from "./ballot/CreateBallot";
 import BallotPreview from './ballot/BallotPreview'

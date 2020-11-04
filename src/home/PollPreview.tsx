@@ -1,4 +1,4 @@
-import React, { Component, Context } from 'react'
+import React, { Component } from 'react'
 import { Card, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { GetPollResponse, getPoll } from '../api'

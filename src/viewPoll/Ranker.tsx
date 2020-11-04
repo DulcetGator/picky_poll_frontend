@@ -56,7 +56,7 @@ class Candidate extends Component<CandidateProps, CandidateState> {
 
   onDrag(e: React.DragEvent) {
     e.preventDefault()
-    if (e.clientY != 0) {
+    if (e.clientY !== 0) {
       const info = {y: e.clientY}
       this.props.onDrag(info)
     }
@@ -118,21 +118,19 @@ class Ranker extends Component<Props, State> {
   }
 
   onDragCandidate(key: string, dragInfo: CandidateDragInfo) {
-    const oldIndex = this.state.orderedCandidates.findIndex(c => c.name == key)
+    const oldIndex = this.state.orderedCandidates.findIndex(c => c.name === key)
     var newIndex = this.state.orderedCandidates.findIndex(c => c.yPos > dragInfo.y)
     if (newIndex < 0) {
       newIndex = this.state.orderedCandidates.length - 1
     }
 
-    if (oldIndex != newIndex) {
+    if (oldIndex !== newIndex) {
       const nextState = this.getNextState(oldIndex, newIndex)
       this.setState(nextState)
     }
   }
 
   getNextState(oldIndex: number, newIndex: number): {orderedCandidates: RankerCandidateRef[]} {
-    const candidates = this.state.orderedCandidates
-
     const order = [...this.state.orderedCandidates]
     order.splice(newIndex, 0, order.splice(oldIndex, 1)[0])
     return {
