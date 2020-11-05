@@ -1,4 +1,4 @@
-export type StvExplainPhase = {
+export type ExplainStvRound = {
   candidateCounts: {
     count: number,
     candidates: Set<string>
@@ -38,10 +38,10 @@ function countVotes(
 }
 
 function explainStvRec(
-  priorPhases: StvExplainPhase[],
+  priorPhases: ExplainStvRound[],
   candidates: string[],
   ballots: string[][],
-): StvExplainPhase[] {
+): ExplainStvRound[] {
   const candidateCounts = countVotes(
     candidates,
     ballots
@@ -53,7 +53,7 @@ function explainStvRec(
     candidateCounts[0].candidates.forEach(c =>
       eliminated.add(c)
     )
-    const nextPhase: StvExplainPhase = {
+    const nextPhase: ExplainStvRound = {
       candidateCounts: candidateCounts,
     }
     priorPhases.splice(priorPhases.length, 0, nextPhase)
@@ -65,7 +65,7 @@ function explainStvRec(
   }
 }
 
-export function explainStv(ballots: string[][]): StvExplainPhase[] {
+export function explainStv(ballots: string[][]): ExplainStvRound[] {
   const allCandidates: string[] = Array.from(new Set(ballots
     .flat()
     .sort()

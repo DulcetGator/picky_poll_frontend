@@ -3,6 +3,7 @@ import { Ballot, Poll } from "../api";
 import CreateBallot from "./ballot/CreateBallot";
 import BallotPreview from './ballot/BallotPreview'
 import MyBallotPreview from './ballot/MyBallotPreview'
+import { StvExplainer } from './explanation/StvExplainer'
 import { IdentityContext, IdentityService } from "../userIdentity";
 import './ViewRetrievedPoll.css'
 
@@ -65,8 +66,8 @@ class ViewRetrievedPoll extends Component<Props, State> {
     return (
       <div>
         <h1>{this.props.poll.description}</h1>
-        <h2>Already voted:</h2>
-        {this.ballots()}
+        <h2>Explanation</h2>
+        <StvExplainer ballots={this.props.ballots} />
         <h2>Cast your vote:</h2>
         <CreateBallot
           poll={this.props.poll}
@@ -74,6 +75,8 @@ class ViewRetrievedPoll extends Component<Props, State> {
           isNew={true}
           onSubmitBallot={b=>this.onSubmitNewBallot(b)}
         />
+        <h2>Already voted:</h2>
+        {this.ballots()}
       </div>
     );
   }
