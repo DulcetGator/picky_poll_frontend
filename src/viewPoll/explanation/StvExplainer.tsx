@@ -45,14 +45,14 @@ function PhaseExplainer(props: {round: ExplainStvRound}) {
     return Array
       .from(cc.candidates)
       .map( candidate => (
-        <tr>
-          <td>
+        <tr key={candidate}>
+          <td className="td-marker">
             {markers}
           </td>
-          <td>
+          <td className="td-count">
             {cc.count}
           </td>
-          <td>
+          <td className="td-candidate">
             {candidate}
           </td>
         </tr>
@@ -60,13 +60,15 @@ function PhaseExplainer(props: {round: ExplainStvRound}) {
   }
 
   return (
-    <Table striped>
-      <tbody>
-        {
-          candidateCounts.flatMap((cc, i) => rows(cc, i))
-        }
-      </tbody>
-    </Table>
+    <div className="PhaseExplainer">
+      <Table size="sm" striped>
+        <tbody>
+          {
+            candidateCounts.flatMap((cc, i) => rows(cc, i))
+          }
+        </tbody>
+      </Table>
+    </div>
   )
 }
 

@@ -52,7 +52,7 @@ export class ListPolls extends Component<Props, State> {
   render() {
     return (
       <div className="ListPolls">
-        {this.pollsSublist("Polls you manage", this.state.myPolls)}
+        {this.pollsSublist("Polls you've created", this.state.myPolls)}
         {this.pollsSublist("Polls you've viewed", this.state.seenPolls)}
       </div>
     )

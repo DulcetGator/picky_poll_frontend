@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { ListGroup } from 'react-bootstrap'
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
+import { About } from './about/About'
 import Home from './home/Home'
 import ViewPoll from './viewPoll/ViewPoll'
 import CreatePollForm from './create/CreatePollForm'
@@ -20,17 +22,32 @@ class App extends Component<Props, State> {
     }
   }
 
+  navLinks() {
+    return [
+      {path: '/', name: 'Home'},
+      {path: '/about', name: 'About'},
+      {path: 'create', name: 'Create Poll'},
+    ]
+  }
+
   render() {
     return (
       <div className="App">
         <Router>
           <header className="App-header">
-            <Link to="/">
-              <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="App-title">Welcome to React</h1>
-            </Link>
+            <div className="app-name">Picky Poll</div>
+            <ListGroup horizontal>
+              {this.navLinks().map(l =>
+                <Link to={l.path} key={l.name}>
+                  <ListGroup.Item>
+                    {l.name}
+                  </ListGroup.Item>
+                </Link>
+              )}
+            </ListGroup>
           </header>
           <Switch>
+            <Route path="/about" component={About} />
             <Route path="/create" component={CreatePollRoute} />
             <Route path="/view/:pollId" component={PollDetailsRoute} />
             <Route exact path="/" component={HomeRoute} />

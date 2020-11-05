@@ -1,0 +1,27 @@
+.About {
+  max-width: 70em;
+  margin: 0 auto;
+  font-size: 0.9em;
+}
+
+.About .intro-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  text-align: left;
+}
+
+.About .intro-cards .card {
+  flex-basis: 33%;
+  padding: 2em;
+  margin: 1em;
+}
+
+
+.About ul {
+  list-style: disc;
+}
+
+.About li {
+  text-align: left;
+}

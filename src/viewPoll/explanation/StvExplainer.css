@@ -1,4 +1,25 @@
 .StvExplainer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+
+.PhaseExplainer {
+  width: 40em;
+  margin: 0 auto;
+}
+
+.PhaseExplainer table {
+  table-layout: fixed;
+}
+
+.PhaseExplainer .td-count {
+  width: 5em;
+}
+
+.PhaseExplainer .td-marker {
+  width: 5em;
+}
+
+.PhaseExplainer .td-candidate {
+  text-align: left;
 }
