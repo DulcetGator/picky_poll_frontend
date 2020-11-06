@@ -24,7 +24,7 @@ spec:
     - host: pickypoll.com
       http:
         paths:
-          - path: /(?!api)
+          - path: /(?!api/)(.*)
             backend:
               serviceName: vote-gui
               servicePort: 80
