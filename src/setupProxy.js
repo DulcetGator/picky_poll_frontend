@@ -1,18 +1,22 @@
 const proxy = require('http-proxy-middleware');
 
-const backend = process.env.BACKEND_ENV === 'prod'
-  ? 'https://api.pickypoll.com/'
+const isProd = process.env.BACKEND_ENV === 'prod'
+const backend = isProd
+  ? 'https://pickypoll.com/api/'
   : 'http://localhost:8080/'
 
+const pathRewriteTarget = isProd
+  ? '/api/'
+  : '/'
 
 module.exports = function(app) {
   app.use(
     '/api',
     proxy({
-      target: 'http://localhost:8080/',
+      target: backend,
       xfwd: false, //backend will redirect when these are present.
       changeOrigin: true,
-      pathRewrite: {'^/api/': '/'}
+      pathRewrite: {'^/api/': pathRewriteTarget}
     })
   );
 };

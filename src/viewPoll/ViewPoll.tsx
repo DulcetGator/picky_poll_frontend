@@ -24,7 +24,7 @@ class ViewPoll extends Component<Props, State> {
     this.state = { poll: null, ballots: [] };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getPoll();
   }
 
