@@ -24,33 +24,11 @@ spec:
     - host: pickypoll.com
       http:
         paths:
-          - path: /(?!api/)(.*)
-            backend:
+          -  path: /
+             pathType: Prefix
+             backend:
               serviceName: vote-gui
               servicePort: 80
-  tls:
-    - hosts:
-      - pickypoll.com
-      secretName: pickypoll-tls
----
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: api-proxy
-  namespace: pickypoll
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-spec:
-  rules:
-    - host: pickypoll.com
-      http:
-        paths:
-          - path: /api(/|$)(.*)
-            backend:
-              serviceName: vote-service
-              servicePort: 8080
   tls:
     - hosts:
       - pickypoll.com

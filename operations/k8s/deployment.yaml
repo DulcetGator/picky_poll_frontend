@@ -15,7 +15,7 @@ spec:
       containers:
         - name: app
           stdin: true
-          image: stephenmerc/vote-gui:latest
+          image: stephenmerc/vote-gui:5
           imagePullPolicy: Always
           ports:
             - containerPort: 80
