@@ -1,3 +1,7 @@
 .PhaseControls {
   margin: 0 auto;
 }
+
+.PhaseControls .pagination {
+  margin: 0; /*override react-bootstrap*/
+}

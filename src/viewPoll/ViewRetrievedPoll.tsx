@@ -3,7 +3,7 @@ import { Ballot, Poll } from "../api";
 import CreateBallot from "./ballot/CreateBallot";
 import BallotPreview from './ballot/BallotPreview'
 import MyBallotPreview from './ballot/MyBallotPreview'
-import { StvExplainer } from './explanation/StvExplainer'
+import { InstantRunoffExplainer } from './explanation/InstantRunoffExplainer'
 import { IdentityContext, IdentityService } from "../userIdentity";
 import './ViewRetrievedPoll.css'
 
@@ -67,7 +67,7 @@ class ViewRetrievedPoll extends Component<Props, State> {
       <div>
         <h1>{this.props.poll.description}</h1>
         <h2>Explanation</h2>
-        <StvExplainer ballots={this.props.ballots} />
+        <InstantRunoffExplainer ballots={this.props.ballots} />
         <h2>Cast your vote:</h2>
         <CreateBallot
           poll={this.props.poll}

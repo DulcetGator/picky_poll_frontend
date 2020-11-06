@@ -4,7 +4,7 @@ import { Ballot } from '../../api'
 import { ExplainStvRound, explainStv } from './explainUtil'
 import { PhaseControls } from './partials/PhaseControls'
 
-import './StvExplainer.css'
+import './InstantRunoffExplainer.css'
 
 type Props = {
   ballots: Ballot[]
@@ -72,7 +72,7 @@ function PhaseExplainer(props: {round: ExplainStvRound}) {
   )
 }
 
-export class StvExplainer extends React.Component<Props, State> {
+export class InstantRunoffExplainer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -95,10 +95,10 @@ export class StvExplainer extends React.Component<Props, State> {
       <PhaseControls 
         isFirst={this.state.phase === 0}
         isLast={this.state.phase === this.state.explanation.length - 1}
-        onFirst={this.makePhaseMutator(i => 0)}
+        onFirst={this.makePhaseMutator(_ => 0)}
         onPrev={this.makePhaseMutator(i => i-1)}
         onNext={this.makePhaseMutator(i => i+1)}
-        onLast={this.makePhaseMutator(i => this.state.explanation.length-1)}
+        onLast={this.makePhaseMutator(_ => this.state.explanation.length-1)}
       />
     )
   }
@@ -106,8 +106,15 @@ export class StvExplainer extends React.Component<Props, State> {
   render() {
     return (
       <div className="StvExplainer" >
+        <div className="stv-explainer-header">
+          <div className="round-indicator">
+            Round {this.state.phase + 1}
+          </div>
+          <div>
+            {this.phaseControls()}
+          </div>
+        </div>
         <PhaseExplainer round={this.state.explanation[this.state.phase]} />
-        {this.phaseControls()}
       </div>
     )
   }

@@ -1,11 +1,19 @@
 .StvExplainer {
   display: flex;
   flex-direction: column;
-}
-
-.PhaseExplainer {
   width: 40em;
   margin: 0 auto;
+}
+
+.StvExplainer .stv-explainer-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.StvExplainer .round-indicator {
+  margin: 1em;
 }
 
 .PhaseExplainer table {
@@ -17,7 +25,7 @@
 }
 
 .PhaseExplainer .td-marker {
-  width: 5em;
+  width: 7em;
 }
 
 .PhaseExplainer .td-candidate {

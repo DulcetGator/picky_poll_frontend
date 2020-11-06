@@ -26,7 +26,7 @@ class App extends Component<Props, State> {
     return [
       {path: '/', name: 'Home'},
       {path: '/about', name: 'About'},
-      {path: 'create', name: 'Create Poll'},
+      {path: '/create', name: 'Create Poll'},
     ]
   }
 
