@@ -1,0 +1,7 @@
+.poll-vote-status:empty:before {
+  content: "\200b";
+}
+
+.poll-vote-status {
+  margin: 0;
+}

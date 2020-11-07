@@ -66,8 +66,11 @@ class ViewRetrievedPoll extends Component<Props, State> {
     return (
       <div>
         <h1>{this.props.poll.description}</h1>
-        <h2>Explanation</h2>
-        <InstantRunoffExplainer ballots={this.props.ballots} />
+        {
+          this.props.ballots.length > 0
+          ? <InstantRunoffExplainer ballots={this.props.ballots} />
+          : null
+        }
         <h2>Cast your vote:</h2>
         <CreateBallot
           poll={this.props.poll}

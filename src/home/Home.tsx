@@ -6,9 +6,6 @@ export default function Home() {
   return (
     <>
       <ListPolls />
-      <Link to='/create' >
-        <p>Create a new poll</p>
-      </Link>
     </>
   );
 }

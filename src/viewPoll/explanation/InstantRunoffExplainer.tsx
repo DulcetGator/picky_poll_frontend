@@ -1,6 +1,6 @@
 import React from 'react'
 import { Ballot } from '../../api'
-import { ExplainStvRound, explainStv } from './explainUtil'
+import { InstantRunoffResult, instantRunoff } from '../../util/instantRunoff'
 import { PhaseControls } from './partials/PhaseControls'
 import { PhaseExplainer } from './partials/PhaseExplainer'
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 type State = {
-  explanation: ExplainStvRound[]
+  result: InstantRunoffResult,
   phaseIndex: number
 }
 
@@ -19,9 +19,13 @@ export class InstantRunoffExplainer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const explanation = explainStv(this.props.ballots.map(b => b.rankings))
+    const result = instantRunoff(this.props.ballots.map(b => b.rankings))
+    if (result.rounds.length > 1) {
+      //drop the last round, which has only the winners.
+      result.rounds.splice(result.rounds.length - 1, 1)
+    }
     this.state = {
-      explanation: explanation,
+      result: result,
       phaseIndex: 0
     }
   }
@@ -37,17 +41,17 @@ export class InstantRunoffExplainer extends React.Component<Props, State> {
     return (
       <PhaseControls 
         isFirst={this.state.phaseIndex === 0}
-        isLast={this.state.phaseIndex === this.state.explanation.length - 1}
+        isLast={this.state.phaseIndex === this.state.result.rounds.length - 1}
         onFirst={this.makePhaseMutator(_ => 0)}
         onPrev={this.makePhaseMutator(i => i-1)}
         onNext={this.makePhaseMutator(i => i+1)}
-        onLast={this.makePhaseMutator(_ => this.state.explanation.length-1)}
+        onLast={this.makePhaseMutator(_ => this.state.result.rounds.length-1)}
       />
     )
   }
 
   render() {
-    const phase = this.state.explanation[this.state.phaseIndex]
+    const phase = this.state.result.rounds[this.state.phaseIndex]
     return (
       <div className="StvExplainer" >
         { phase

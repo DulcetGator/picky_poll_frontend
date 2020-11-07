@@ -1,17 +1,15 @@
 .PollPreview {
-  padding: 1em;
+  padding: 0.5em;
   width: 23em;
-  height: 7em;
+  height: 8em;
   text-align: left;
-}
-
-.poll-vote-status:empty:before {
-  content: "\200b";
 }
 
 .poll-description:empty:before {
   content: "\200b";
 }
+
 .poll-description {
   overflow: hidden;
+  height: 1em;
 }

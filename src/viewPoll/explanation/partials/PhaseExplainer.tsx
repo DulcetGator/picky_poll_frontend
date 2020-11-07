@@ -1,8 +1,8 @@
 import React from 'react'
 import { Table } from 'react-bootstrap'
-import { ExplainStvRound } from '../explainUtil'
+import { InstantRunoffRound } from '../../../util/instantRunoff'
 
-export function PhaseExplainer(props: {round: ExplainStvRound}) {
+export function PhaseExplainer(props: {round: InstantRunoffRound}) {
 
   const candidateCounts = [...props.round.candidateCounts].reverse()
   function rowMarkers(index: number) {

@@ -1,8 +1,13 @@
-export type ExplainStvRound = {
+export type InstantRunoffRound = {
   candidateCounts: {
     count: number,
     candidates: Set<string>
   }[]
+}
+
+export type InstantRunoffResult = {
+  winners: Set<string>,
+  rounds: InstantRunoffRound[],
 }
 
 function countVotes(
@@ -38,10 +43,10 @@ function countVotes(
 }
 
 function explainStvRec(
-  priorPhases: ExplainStvRound[],
+  priorPhases: InstantRunoffRound[],
   candidates: string[],
   ballots: string[][],
-): ExplainStvRound[] {
+): InstantRunoffRound[] {
   const candidateCounts = countVotes(
     candidates,
     ballots
@@ -53,7 +58,7 @@ function explainStvRec(
     candidateCounts[0].candidates.forEach(c =>
       eliminated.add(c)
     )
-    const nextPhase: ExplainStvRound = {
+    const nextPhase: InstantRunoffRound = {
       candidateCounts: candidateCounts,
     }
     priorPhases.splice(priorPhases.length, 0, nextPhase)
@@ -65,11 +70,19 @@ function explainStvRec(
   }
 }
 
-export function explainStv(ballots: string[][]): ExplainStvRound[] {
+export function instantRunoff(ballots: string[][]): InstantRunoffResult {
   const allCandidates: string[] = Array.from(new Set(ballots
     .flat()
     .sort()
   ).values())
 
-  return explainStvRec([], allCandidates, ballots)
+  const rounds = explainStvRec([], allCandidates, ballots)
+  let winners = new Set<string>()
+  if (rounds.length > 0) {
+    winners = rounds[rounds.length - 1].candidateCounts[0].candidates
+  }
+  return {
+    winners: winners,
+    rounds: rounds,
+  }
 }
