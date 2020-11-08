@@ -39,17 +39,22 @@ type Props = {
 }
 
 type State = {
+  ballot: Ballot,
   isEditing: boolean
 }
 
 export default class MyBallotPreview extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {isEditing: false};
+    this.state = {
+      ballot: props.ballot,
+      isEditing: false,
+    };
   }
 
-  handleSubmitBallot() {
+  handleSubmitBallot(ballot: Ballot) {
     this.setState({
+      ballot: ballot,
       isEditing: false
     });
   }
@@ -63,12 +68,12 @@ export default class MyBallotPreview extends Component<Props, State> {
       return <EditBallot
         poll={this.props.poll}
         ballotKey={this.props.ballotKey}
-        ballot={this.props.ballot} 
-        onSubmitBallot={ballot => this.handleSubmitBallot()}
+        ballot={this.state.ballot} 
+        onSubmitBallot={ballot => this.handleSubmitBallot(ballot)}
       />;
     } else {
       return <MyBallotReadOnly 
-        ballot={this.props.ballot}
+        ballot={this.state.ballot}
         onEdit={() => this.handleEdit()}
       />
     }
