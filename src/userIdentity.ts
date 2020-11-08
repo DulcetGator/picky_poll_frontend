@@ -5,6 +5,7 @@ let crypto = require('crypto')
 export type KnownPoll = {
     poll: Poll,
     isMine: boolean,
+    isHidden: boolean,
     knownBallots: string[]
 }
 
@@ -21,6 +22,8 @@ export interface IdentityService {
 
     addKnownPoll(poll: Poll, isMine: boolean): void,
     addKnownBallot(pollId: string, ballotId: string): void,
+
+    hidePoll(pollId: string): void
 }
 
 export class LocalStoreIdentityService implements IdentityService {
@@ -77,9 +80,10 @@ export class LocalStoreIdentityService implements IdentityService {
         let identity = this._getIdentity()
         let desiredIndex = identity.knownPolls.findIndex(p => p.poll.id >= poll.id);
         if (desiredIndex > -1 && identity.knownPolls[desiredIndex].poll.id === poll.id) {
+            this.mutateKnownPoll(poll.id, p => p.isHidden = false)
             return;
         } else {
-            let newPoll: KnownPoll = {poll, isMine, knownBallots: []}
+            let newPoll: KnownPoll = {poll, isMine, isHidden: false, knownBallots: []}
             if (desiredIndex < 0) {
                 identity.knownPolls = identity.knownPolls.concat([newPoll])
             } else {
@@ -90,16 +94,21 @@ export class LocalStoreIdentityService implements IdentityService {
     }
 
     addKnownBallot(pollId: string, ballotId: string): void {
-        let oldIdentity = this._getIdentity()
-        let oldPollIndex = oldIdentity.knownPolls.findIndex(p => p.poll.id === pollId)
-        let oldPoll = oldIdentity.knownPolls[oldPollIndex]
-        let newPoll: KnownPoll = {
-            poll: oldPoll.poll,
-            isMine: oldPoll.isMine,
-            knownBallots: oldPoll.knownBallots.concat([ballotId])
-        }
-        oldIdentity.knownPolls[oldPollIndex]=newPoll
-        this._setIdentity(oldIdentity);
+        this.mutateKnownPoll(pollId, p => {
+            p.knownBallots = p.knownBallots.concat([ballotId])
+        })
+    }
+
+    hidePoll(pollId: string): void {
+        this.mutateKnownPoll(pollId, p => p.isHidden=true)
+    }
+
+    mutateKnownPoll(pollId: string, mutator: (kp: KnownPoll) => void): void {
+        const identity = this._getIdentity()
+        const pollIndex = identity.knownPolls.findIndex(p => p.poll.id === pollId)
+        const poll = identity.knownPolls[pollIndex]
+        mutator(poll)
+        this._setIdentity(identity);
     }
 }
 

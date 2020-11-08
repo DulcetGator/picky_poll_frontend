@@ -1,40 +1,55 @@
-import React, { Component, ReactNode } from 'react'
-import { Card, Spinner } from 'react-bootstrap'
+import React, { Component, MouseEvent, ReactNode } from 'react'
+import { Button, Card, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { GetPollResponse, getPoll } from '../../api'
 import { KnownPoll } from '../../userIdentity'
 import { PollPreview } from './PollPreview'
+import { RemoveModal } from './RemoveModal'
 import './PollPreviewer.css'
 
 type Props = {
-  knownPoll: KnownPoll
+  knownPoll: KnownPoll,
+  onRemove: (kp: KnownPoll) => void
 }
 
 type State = {
-  status: 'ok'
-  poll: GetPollResponse
-} | {status: 'notfound'} | {status: 'fetching'}
+
+  pollState: {
+    status: 'ok'
+    poll: GetPollResponse
+  } | {status: 'notfound'} | {status: 'fetching'},
+
+  removeModal: boolean
+}
 
 export class PollPreviewer extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = {status: 'fetching'}
+    this.state = {
+      pollState: {
+        status: 'fetching'
+      },
+      removeModal: false
+    }
   }
 
   async componentDidMount() {
     let poll = await getPoll(this.props.knownPoll.poll.id)
     if (poll) {
-      this.setState({status: 'ok', poll: poll})
+      this.setState(Object.assign({}, this.state,
+        {pollState: {status: 'ok', poll: poll}
+      }))
     } else {
-      this.setState({status: 'notfound'})
+      this.setState(Object.assign({}, this.state,
+        {pollState: {status: 'notfound'}}))
     }
   }
 
-  linkCard(contents: ReactNode) {
-    switch(this.state.status) {
+  wrapInLink(contents: ReactNode) {
+    switch(this.state.pollState.status) {
       case 'ok':
         return (
-          <Link to={`/view/${this.state.poll.poll.id}`}>
+          <Link to={`/view/${this.state.pollState.poll.poll.id}`}>
             {contents}
           </Link>
         )
@@ -44,10 +59,10 @@ export class PollPreviewer extends Component<Props, State> {
   }
 
   cardContents() {
-    switch(this.state.status) {
+    switch(this.state.pollState.status) {
       case 'ok':
         return <PollPreview
-          poll={this.state.poll}
+          poll={this.state.pollState.poll}
           knownPoll={this.props.knownPoll} />
       case 'fetching':
         return (
@@ -62,15 +77,49 @@ export class PollPreviewer extends Component<Props, State> {
     }
   }
 
+  handleRemoveButton(e: MouseEvent) {
+    e.preventDefault()
+    this.setState(Object.assign({}, this.state, {removeModal: true}))
+  }
+
+  handleCancelRemove() {
+    this.setState(Object.assign({}, this.state, {removeModal: false}))
+  }
+
+  handleConfirmRemove() {
+    this.props.onRemove(this.props.knownPoll)
+  }
+
+  removeModal() {
+    return this.state.removeModal
+      ? <RemoveModal poll={this.props.knownPoll}
+          onHide={() => this.handleCancelRemove()}
+          onOk={() => this.handleConfirmRemove()}
+        />
+      : null
+  }
+
   render() {
     const card = (
-      <Card className="PollPreview">
-        <Card.Title className="poll-description">
-          {this.props.knownPoll.poll.description}
+      <Card className="PollPreviewer">
+        {this.removeModal()}
+        <Card.Title>
+          <div className="title">
+            <div className="poll-description">
+              {this.wrapInLink(this.props.knownPoll.poll.description)}
+            </div>
+            <div className="remove-poll-button">
+              <Button size="sm" variant="secondary" onClick={e => this.handleRemoveButton(e)}>
+                Remove
+              </Button>
+            </div>
+          </div>
         </Card.Title>
-        {this.cardContents()}
+        <div>
+          {this.wrapInLink(this.cardContents())}
+        </div>
       </Card>
     )
-    return this.linkCard(card)
+    return card;
   }
 }

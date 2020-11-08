@@ -22,8 +22,8 @@ export class ListPolls extends Component<Props, State> {
   }
 
   componentDidMount() {
-    const allKnownPolls = this.context.getKnownPolls()
-    const sorted = allKnownPolls
+    const knownPolls = this.context.getKnownPolls().filter(p => !p.isHidden)
+    const sorted = knownPolls
       .sort((a, b) => a.poll.expires.localeCompare(b.poll.expires))
       .reverse()
     const myPolls = sorted.filter(kp => kp.isMine)
@@ -35,6 +35,19 @@ export class ListPolls extends Component<Props, State> {
     })
   }
 
+  handleRemove(kp: KnownPoll) {
+    this.context.hidePoll(kp.poll.id)
+    const [myPolls, seenPolls] = [this.state.myPolls, this.state.seenPolls].map(pollList => {
+      const index = pollList.indexOf(kp)
+      if (index >= 0) {
+        return [...pollList.slice(0, index), ...pollList.slice(index + 1)].flat(1)
+      } else {
+        return pollList
+      }
+    })
+    this.setState({myPolls: myPolls, seenPolls: seenPolls})
+  }
+
   pollsSublist(title: string, knownPollsSubset: KnownPoll[]) {
     if (knownPollsSubset.length === 0) {
       return null
@@ -44,7 +57,7 @@ export class ListPolls extends Component<Props, State> {
         <ul>
           {knownPollsSubset.map(kp =>
             <li key={kp.poll.id}>
-              <PollPreviewer knownPoll={kp} />
+              <PollPreviewer knownPoll={kp} onRemove={kp => this.handleRemove(kp)} />
             </li>
           )}
         </ul>
