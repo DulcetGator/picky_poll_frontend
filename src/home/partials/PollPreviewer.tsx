@@ -54,7 +54,9 @@ export class PollPreviewer extends Component<Props, State> {
           </Link>
         )
       default:
-        return contents;
+        return <div className="null-link">
+          {contents}
+        </div>
     }
   }
 
@@ -105,19 +107,23 @@ export class PollPreviewer extends Component<Props, State> {
         {this.removeModal()}
         <Card.Title>
           <div className="title">
-            <div className="poll-description">
-              {this.wrapInLink(this.props.knownPoll.poll.description)}
-            </div>
-            <div className="remove-poll-button">
+            {this.wrapInLink(
+              <div className="padder poll-description">
+                {this.props.knownPoll.poll.description}
+              </div>
+            )}
+            <div className="padder remove-poll-button">
               <Button size="sm" variant="secondary" onClick={e => this.handleRemoveButton(e)}>
                 Remove
               </Button>
             </div>
           </div>
         </Card.Title>
-        <div>
-          {this.wrapInLink(this.cardContents())}
-        </div>
+        {this.wrapInLink(
+          <Card.Body>
+            {this.cardContents()}
+          </Card.Body>
+        )}
       </Card>
     )
     return card;
