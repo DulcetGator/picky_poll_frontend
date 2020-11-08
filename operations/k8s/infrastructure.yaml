@@ -19,6 +19,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
   rules:
     - host: pickypoll.com
@@ -32,4 +33,5 @@ spec:
   tls:
     - hosts:
       - pickypoll.com
+      - www.pickypoll.com
       secretName: pickypoll-tls
