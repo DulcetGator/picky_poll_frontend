@@ -1,4 +1,5 @@
 import React, { Component, Context } from "react";
+import { Button } from 'react-bootstrap'
 import { Ballot, Poll } from "../api";
 import CreateBallot from "./ballot/CreateBallot";
 import BallotPreview from './ballot/BallotPreview'
@@ -12,7 +13,11 @@ type Props = {
   ballots: Ballot[]
 };
 
-type State = {};
+type State = {
+  ownedBallots: Ballot[],
+  unownedBallots: Ballot[],
+  expandRedundantBallot: boolean
+};
 
 class ViewRetrievedPoll extends Component<Props, State> {
 
@@ -21,14 +26,30 @@ class ViewRetrievedPoll extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = {};
+
+    this.state = {
+      ownedBallots: [],
+      unownedBallots: [],
+      expandRedundantBallot: false
+    };
   }
 
-  ballots() {
-    const myBallotIds = this.context.getKnownBallots(this.props.poll.id) || [];
-    const myBallots = this.props.ballots.filter(b =>
-      myBallotIds.indexOf(b.id) > -1
-    ).map(b => 
+  componentDidMount() {
+    const knownBallotIds = this.context.getKnownBallots(this.props.poll.id) || [];
+    const ownedBallots = this.props.ballots.filter(b =>
+      knownBallotIds.indexOf(b.id) > -1
+    )
+    const unownedBallots = this.props.ballots.filter(b=> 
+      knownBallotIds.indexOf(b.id) <= -1
+    )
+    this.setState(Object.assign({}, this.state, {
+      ownedBallots,
+      unownedBallots,
+    }))
+  }
+
+  ownedBallotSection() {
+    const ballots = this.state.ownedBallots.map(b => 
       <li className="my-ballot-item" key={b.id}>
         <MyBallotPreview
           poll = {this.props.poll}
@@ -37,29 +58,74 @@ class ViewRetrievedPoll extends Component<Props, State> {
         />
       </li>
     );
+    return <div>
+      <h2>Your ballot</h2>
+      {
+        ballots.length > 0
+        ? <ul className="my-ballots-list">
+            {ballots}
+          </ul>
+        : <CreateBallot
+            poll={this.props.poll}
+            ballotKey={this.context.getKey()}
+            isNew={true}
+            onSubmitBallot={b=>this.onSubmitNewBallot(b)}
+          />
+      }
+    </div>
+  }
 
-    const theirBallots = this.props.ballots.filter(b=> 
-      myBallotIds.indexOf(b.id) <= -1
-    ).map((b: Ballot) => 
+  unownedBallotsSection() {
+
+    const ballots = this.state.unownedBallots.map((b: Ballot) => 
       <li className="their-ballot-item" key={b.id}>
         <BallotPreview ballot={b} />
       </li>
     );
 
-    const myBallotsList = myBallots.length > 0
-    ? <ul className="my-ballots-list">{myBallots}</ul>
-    : <></>
+    const theirBallotsList = ballots.length > 0
+    ? <ul className="their-ballots-list">{ballots}</ul>
+    : <p>Nobody else has submitted a ballot yet.</p>
 
-    const theirBallotsList = theirBallots.length > 0
-    ? <ul className="their-ballots-list">{theirBallots}</ul>
-    : <></>
+    return <>
+      <h2>Other ballots</h2>
+      {theirBallotsList}
+    </>
+  }
 
-    return (
-      <>
-        {myBallotsList}
-        {theirBallotsList}
-      </>
-    );
+  redundantBallotSection() {
+  
+    if (this.state.ownedBallots.length === 0) {
+      return null;
+    }
+
+    if (!this.state.expandRedundantBallot) {
+      return <div>
+        <p className="desribe-redundant-ballot">
+          You already submitted a ballot, but {' '}
+          <a
+            role="button" tabIndex={0}
+            // size="sm"
+            onClick={_ => this.handleEnableRedundantBallot()}
+            // variant="link"
+            >
+            you can submit another
+          </a>
+          . Others can see each ballot that is submitted.
+        </p>
+      </div>
+    }
+
+    return <CreateBallot
+      poll={this.props.poll}
+      ballotKey={this.context.getKey()}
+      isNew={true}
+      onSubmitBallot={b=>this.onSubmitNewBallot(b)}
+    />
+  }
+
+  handleEnableRedundantBallot() {
+    this.setState(Object.assign({}, this.state, {expandRedundantBallot: true}))
   }
 
   render() {
@@ -71,15 +137,9 @@ class ViewRetrievedPoll extends Component<Props, State> {
           ? <InstantRunoffExplainer ballots={this.props.ballots} />
           : null
         }
-        <h2>Cast your vote:</h2>
-        <CreateBallot
-          poll={this.props.poll}
-          ballotKey={this.context.getKey()}
-          isNew={true}
-          onSubmitBallot={b=>this.onSubmitNewBallot(b)}
-        />
-        <h2>Already voted:</h2>
-        {this.ballots()}
+        {this.ownedBallotSection()}
+        {this.unownedBallotsSection()}
+        {this.redundantBallotSection()}
       </div>
     );
   }
@@ -89,6 +149,11 @@ class ViewRetrievedPoll extends Component<Props, State> {
       this.props.poll.id,
       ballot.id
     );
+    const newBallots = [...this.state.ownedBallots, ballot]
+    this.setState(Object.assign({}, this.state, {
+      expandRedundantBallot: false,
+      ownedBallots: newBallots,
+    }))
   }
 }
 

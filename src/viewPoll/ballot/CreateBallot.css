@@ -1,0 +1,10 @@
+.CreateBallot {
+  max-width: 20em;
+  margin: auto;
+  padding: 1em;
+}
+
+.CreateBallot .submit-button {
+  max-width: 5em;
+  margin: auto;
+}

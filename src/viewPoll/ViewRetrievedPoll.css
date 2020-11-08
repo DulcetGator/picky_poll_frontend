@@ -14,3 +14,8 @@
   min-width: 15em;
   margin: 1em;
 }
+
+.desribe-redundant-ballot a[role="button"] {
+  color: #007bff;
+  text-decoration: underline;
+}

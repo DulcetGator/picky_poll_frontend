@@ -1,8 +1,11 @@
-import React, { Component } from "react";
-import Ranker from "../Ranker";
-import { Poll, Ballot} from "../../api"
-import { postBallot } from "../../api"
+import React, { Component } from 'react'
+import { Button, Card, FormControl, InputGroup } from 'react-bootstrap'
+import Ranker from '../Ranker'
+import { Poll, Ballot} from '../../api'
+import { postBallot } from '../../api'
 import shuffle from '../../util/shuffle'
+
+import './CreateBallot.css'
 
 let crypto = require("crypto")
 
@@ -28,20 +31,27 @@ class CreateBallot extends Component<Props, State> {
 
   render() {
     return (
-      <form onSubmit={e => this.onSubmit(e)}>
+      <Card className="CreateBallot">
+        <Card.Header>
+          <InputGroup>
+            <FormControl
+              placeholder="Name or alias"
+              onChange={e => this.onUpdateVoterName(e.target.value)} />
+          </InputGroup>
+        </Card.Header>
         <Ranker
           candidates={this.state.ballot.rankings}
           onUpdateCandidates={e => this.onUpdateCandidates(e)}
-        />
-        <label>
-          Your name:{" "}
-          <input
-            type="text"
-            onChange={n => this.onUpdateVoterName(n)}
-            disabled={!this.props.isNew} />
-        </label>
-        <button type="submit">Submit Ballot</button>
-      </form>
+          />
+        <p>
+          Your ballot, including your name, will be visible to all viewers of this poll.
+        </p>
+        <Button
+          onClick={e => this.handleSubmit(e)}
+          className="submit-button">
+            Submit
+        </Button>
+      </Card>
     );
   }
 
@@ -51,15 +61,13 @@ class CreateBallot extends Component<Props, State> {
     });
   }
 
-  onUpdateVoterName(event: React.FormEvent<HTMLInputElement>) {
-    let name = event.currentTarget.value;
+  onUpdateVoterName(name: string) {
     this.setState({
       ballot: Object.assign({}, this.state.ballot, {name: name})
     });
   }
 
-  async onSubmit(event: React.FormEvent<HTMLElement>) {
-    event.preventDefault();
+  async handleSubmit(event: React.MouseEvent) {
 
     await postBallot(
       this.props.ballotKey,
