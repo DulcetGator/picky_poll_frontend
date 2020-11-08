@@ -6,7 +6,6 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn install
 
-COPY flow-typed ./flow-typed
 COPY public ./public
 COPY src ./src
 copy tsconfig.json ./
