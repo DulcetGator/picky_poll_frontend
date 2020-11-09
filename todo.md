@@ -1,4 +1,3 @@
-* react-beautiful-dnd
 * backend validation
 	* expiration date
 	* shorter pollId
