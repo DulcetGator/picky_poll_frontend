@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { ListGroup } from 'react-bootstrap'
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
-import logo from "./logo.svg";
 import "./App.css";
 import { About } from './about/About'
 import Home from './home/Home'
+import { ListPolls } from './list/ListPolls'
 import ViewPoll from './viewPoll/ViewPoll'
 import CreatePollForm from './create/CreatePollForm'
 import { LocalStoreIdentityService } from "./userIdentity";
@@ -24,9 +24,9 @@ class App extends Component<Props, State> {
 
   navLinks() {
     return [
-      {path: '/', name: 'Home'},
-      {path: '/about', name: 'About'},
+      {path: '/polls', name: 'View Polls'},
       {path: '/create', name: 'Create Poll'},
+      {path: '/about', name: 'About'},
     ]
   }
 
@@ -49,7 +49,8 @@ class App extends Component<Props, State> {
           <Switch>
             <Route path="/about" component={About} />
             <Route path="/create" component={CreatePollRoute} />
-            <Route path="/view/:pollId" component={PollDetailsRoute} />
+            <Route path="/polls/:pollId" component={PollDetailsRoute} />
+            <Route path="/polls/" component={ListPollRoute} />
             <Route exact path="/" component={HomeRoute} />
           </Switch>
         </Router>
@@ -64,6 +65,11 @@ class HomeRoute extends Component<{}, {}> {
   }
 }
 
+function ListPollRoute() {
+  return <ListPolls />
+}
+  
+
 class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
   constructor(props: {}) {
     super(props);
@@ -73,7 +79,7 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
 
   render() {
     return this.state.poll ? (
-      <Redirect to={`/view/${this.state.poll.id}`} push={true} />
+      <Redirect to={`/polls/${this.state.poll.id}`} push={true} />
     ) : (
       <CreatePollForm onCreatePoll={p => {
         this.setState({ poll: p });

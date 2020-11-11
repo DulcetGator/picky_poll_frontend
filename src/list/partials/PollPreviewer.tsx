@@ -49,7 +49,7 @@ export class PollPreviewer extends Component<Props, State> {
     switch(this.state.pollState.status) {
       case 'ok':
         return (
-          <Link to={`/view/${this.state.pollState.poll.poll.id}`}>
+          <Link to={`/polls/${this.state.pollState.poll.poll.id}`}>
             {contents}
           </Link>
         )
