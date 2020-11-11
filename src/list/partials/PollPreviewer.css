@@ -1,6 +1,6 @@
 .PollPreviewer {
   width: 23em;
-  height: 7em;
+  min-height: 7em;
   text-align: left;
 }
 
@@ -40,14 +40,11 @@
   padding: 0.5rem;
 }
 
-.PollPreviewer .remove-poll-button {
-  float: right;
-}
-
 .poll-description:empty:before {
   content: "\200b";
 }
 
-.poll-description {
+.PollPreviewer .poll-description {
+  width: 12em;
   display: inline-block;
 }
