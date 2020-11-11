@@ -20,3 +20,7 @@
 * distribute link
 * analyze results
 * user keeps changing vote
+
+Test 1.
+1. Confusion over ranked-choice voting. Clicking choices.
+2. Separation of ballots (own vs others') caused confusion

@@ -30,7 +30,10 @@ class ViewPoll extends Component<Props, State> {
 
   render() {
     if (this.state.poll != null) {
-      return <ViewRetrievedPoll poll={this.state.poll} ballots={this.state.ballots}/>;
+      return <ViewRetrievedPoll
+        poll={this.state.poll}
+        ballots={this.state.ballots}
+        onSubmitNewBallot={b => this.handleSubmitNewBallot(b)}/>;
     } else {
       return <span>No poll with id {this.props.pollId}</span>;
     }
@@ -42,6 +45,11 @@ class ViewPoll extends Component<Props, State> {
       this.context.addKnownPoll(response.poll, false)
       this.setState({ poll: response.poll, ballots: response.ballots });
     }
+  }
+
+  handleSubmitNewBallot(b: Ballot) {
+    const ballots = [...this.state.ballots, b]
+    this.setState(Object.assign({}, this.state, {ballots: ballots}))
   }
 }
 
