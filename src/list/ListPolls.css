@@ -11,10 +11,3 @@
 .ListPolls li {
   margin: 1em;
 }
-
-.ListPolls a {
-  color: inherit; 
-}
-.ListPolls a:hover {
-  text-decoration: none;
-}

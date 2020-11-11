@@ -1,4 +1,5 @@
 import React, { Component, Context } from 'react'
+import { Link } from 'react-router-dom'
 import { IdentityContext, IdentityService, KnownPoll } from '../userIdentity'
 import { PollPreviewer } from './partials/PollPreviewer'
 import './ListPolls.css'
@@ -65,11 +66,25 @@ export class ListPolls extends Component<Props, State> {
     }
   }
 
+  nilExplanation() {
+    if (this.state.myPolls.length + this.state.seenPolls.length > 0) {
+      return null
+    }
+    return <div>
+      Polls you've 
+      {' '}<Link to="/create">created</Link>{' '}
+      or seen will be listed here.
+    </div>
+  }
+
   render() {
+    const owned = this.pollsSublist("Polls you've created", this.state.myPolls)
+    const unowned = this.pollsSublist("Polls you've viewed", this.state.seenPolls)
     return (
       <div className="ListPolls">
-        {this.pollsSublist("Polls you've created", this.state.myPolls)}
-        {this.pollsSublist("Polls you've viewed", this.state.seenPolls)}
+        {owned}
+        {unowned}
+        {this.nilExplanation()}
       </div>
     )
   }

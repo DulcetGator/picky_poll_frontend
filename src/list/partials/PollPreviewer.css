@@ -28,7 +28,12 @@
 
 .PollPreviewer .null-link,
 .PollPreviewer a {
+  color:inherit ;
   flex-grow: 1;
+}
+
+.PollPreviewer a:hover {
+  text-decoration: none;
 }
 
 .PollPreviewer .card-body {
