@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { About } from '../about/About';
 import { ListPolls } from '../list/ListPolls'
 import IdentityContext from '../userIdentity';

@@ -26,7 +26,7 @@ export function WinnerDisplay(props: Props) {
       <div className="winner-label">{label}:</div>
       <ul>
         {winners.map(c =>
-          <li className="winner">{c}</li>
+          <li key={c} className="winner">{c}</li>
         )}
       </ul>
     </div>

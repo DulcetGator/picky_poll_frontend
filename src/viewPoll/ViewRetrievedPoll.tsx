@@ -100,11 +100,11 @@ class ViewRetrievedPoll extends Component<Props, State> {
         <p className="desribe-redundant-ballot">
           You already submitted a ballot, but Picky Poll does not prevent you from submitting
           another. Others can see each ballot that is submitted.
-          <p>
-            <Button variant="secondary" onClick={_ => this.handleEnableRedundantBallot()}>
-              New ballot
-            </Button>
-          </p>
+        </p>
+        <p>
+          <Button variant="secondary" onClick={_ => this.handleEnableRedundantBallot()}>
+            New ballot
+          </Button>
         </p>
       </div>
     }
