@@ -12,10 +12,6 @@ type CandidateProps = {
 type CandidateState = {
 };
 
-type CandidateDragInfo = {
-  y: number
-}
-
 class Candidate extends Component<CandidateProps, CandidateState> {
   card: HTMLElement | null = null;
 
