@@ -37,7 +37,6 @@ class App extends Component<Props, State> {
       <div className="App">
         <Router>
           <header className="App-header">
-
             <Navbar variant="dark">
               <Navbar.Brand>
               <div className="app-name">Picky Poll</div>

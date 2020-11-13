@@ -2,7 +2,6 @@ import React from 'react';
 import { Poll } from './api';
 import crypto from 'crypto';
 
-
 export type KnownPoll = {
     poll: Poll,
     isMine: boolean,
