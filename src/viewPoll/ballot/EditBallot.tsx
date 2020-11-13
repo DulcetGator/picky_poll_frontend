@@ -4,6 +4,8 @@ import Ranker from '../Ranker';
 import { Poll, Ballot, postBallot } from '../../api';
 
 import shuffle from '../../util/shuffle';
+import promiseTimeout from '../../util/promiseTimeout'
+import BasicSpinner from '../../partials/BasicSpinner';
 
 type Props = {
   poll: Poll,
@@ -14,7 +16,8 @@ type Props = {
 };
 
 type State = {
-  rankings: string[]
+  rankings: string[],
+  isBusy: boolean,
 };
 
 class CreateBallot extends Component<Props, State> {
@@ -23,6 +26,7 @@ class CreateBallot extends Component<Props, State> {
     let newChoices = props.poll.candidates.filter((c) => props.ballot.rankings.indexOf(c) < 0);
     newChoices = shuffle(newChoices);
     this.state = {
+      isBusy: false,
       rankings: props.ballot.rankings.concat(newChoices),
     };
   }
@@ -38,12 +42,15 @@ class CreateBallot extends Component<Props, State> {
             candidates={this.state.rankings}
             onUpdateCandidates={(e) => this.handleUpdateCandidates(e)}
           />
-          <Button
-            variant="primary"
-            onClick={(e) => this.handleSubmit(e)}
-          >
-            Submit Changes
-          </Button>
+          {this.state.isBusy
+            ? <BasicSpinner>Submitting changes</BasicSpinner>
+            : <Button
+                variant="primary"
+                onClick={(e) => this.handleSubmit(e)}
+              >
+                Submit Changes
+              </Button>
+          }
         </Card.Body>
       </Card>
     );
@@ -55,7 +62,9 @@ class CreateBallot extends Component<Props, State> {
 
   async handleSubmit(event: React.FormEvent<HTMLElement>) {
     event.preventDefault();
+    this.setState({ isBusy: true});
 
+    const minWaitPromise = promiseTimeout(300)
     await postBallot(
       this.props.ballotKey,
       this.props.poll.id,
@@ -63,6 +72,7 @@ class CreateBallot extends Component<Props, State> {
       this.props.ballot.name,
       this.state.rankings,
     );
+    await minWaitPromise;
 
     const newBallot = { ...this.props.ballot, rankings: this.state.rankings };
 

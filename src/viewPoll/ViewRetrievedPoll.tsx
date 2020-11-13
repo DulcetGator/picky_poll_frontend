@@ -65,7 +65,6 @@ class ViewRetrievedPoll extends Component<Props, State> {
             <CreateBallot
               poll={this.props.poll}
               ballotKey={this.context.getKey()}
-              isNew
               onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
             />
           )
@@ -118,7 +117,6 @@ class ViewRetrievedPoll extends Component<Props, State> {
       <CreateBallot
         poll={this.props.poll}
         ballotKey={this.context.getKey()}
-        isNew
         onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
       />
     );

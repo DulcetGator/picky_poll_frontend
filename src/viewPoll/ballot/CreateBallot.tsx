@@ -8,18 +8,19 @@ import crypto from 'crypto';
 import shuffle from '../../util/shuffle';
 
 import './CreateBallot.css';
+import BasicSpinner from '../../partials/BasicSpinner';
+import promiseTimeout from '../../util/promiseTimeout';
 
 
 type Props = {
   poll: Poll,
   ballotKey: string,
-  isNew: boolean,
-
   onSubmitBallot: (ballot: Ballot) => void
 };
 
 type State = {
-  ballot: Ballot
+  ballot: Ballot,
+  isBusy: boolean,
 };
 
 class CreateBallot extends Component<Props, State> {
@@ -27,6 +28,7 @@ class CreateBallot extends Component<Props, State> {
     super(props);
     this.state = {
       ballot: this.makeNewBallot(),
+      isBusy: false,
     };
   }
 
@@ -48,12 +50,15 @@ class CreateBallot extends Component<Props, State> {
         <p>
           Your ballot, including your name, will be visible to all viewers of this poll.
         </p>
-        <Button
-          onClick={() => this.handleSubmit()}
-          className="submit-button"
-        >
-          Submit
-        </Button>
+        {this.state.isBusy
+          ? <BasicSpinner>Submitting ballot</BasicSpinner>
+          : <Button
+              onClick={() => this.handleSubmit()}
+              className="submit-button"
+            >
+              Submit
+          </Button>
+        }
       </Card>
     );
   }
@@ -71,6 +76,8 @@ class CreateBallot extends Component<Props, State> {
   }
 
   async handleSubmit() {
+    this.setState({isBusy: true})
+    const minWaitPromise = promiseTimeout(300)
     await postBallot(
       this.props.ballotKey,
       this.props.poll.id,
@@ -78,6 +85,7 @@ class CreateBallot extends Component<Props, State> {
       this.state.ballot.name,
       this.state.ballot.rankings,
     );
+    await minWaitPromise;
 
     this.props.onSubmitBallot(this.state.ballot);
   }
