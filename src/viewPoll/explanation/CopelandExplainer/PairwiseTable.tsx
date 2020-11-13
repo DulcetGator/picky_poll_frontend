@@ -18,8 +18,10 @@ function getDefeatedCandidates(result: CopelandRanking[]) {
       .flatMap(victor => victor.wins)
       .flatMap(victory => victory.competitor)
   )
-  return Array.from(new Set<string>(result.flatMap(r => r.candidates).map(c => c.candidate)))
+  const retVal = Array.from(new Set<string>(result.flatMap(r => r.candidates).map(c => c.candidate)))
     .filter(c => defeatSet.has(c))
+  retVal.reverse();
+  return retVal;
 }
 
 export default function PairwiseTable(props: Props) {
