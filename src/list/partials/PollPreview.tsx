@@ -2,7 +2,7 @@ import React from 'react';
 import { KnownPoll } from '../../userIdentity';
 import { GetPollResponse } from '../../api';
 import { describeWinners } from '../../util/describeWinners';
-import { instantRunoff } from '../../util/instantRunoff';
+import { copeland } from '../../util/copeland';
 
 import './PollPreview.css';
 
@@ -22,8 +22,8 @@ export function PollPreview(props: Props) {
 
   let winnerDescription = null;
   if (props.poll.ballots.length > 0) {
-    const result = instantRunoff(props.poll.ballots.map((b) => b.rankings));
-    const winnerDescriptionText = describeWinners(isClosed, result.winners);
+    const result = copeland(props.poll.ballots.map((b) => b.rankings));
+    const winnerDescriptionText = describeWinners(isClosed, result[0].candidates.map(c => c.candidate));
     winnerDescription = (
       <p className="poll-vote-status">
         {winnerDescriptionText}

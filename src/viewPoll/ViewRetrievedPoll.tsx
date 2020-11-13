@@ -4,7 +4,7 @@ import { Ballot, Poll } from '../api';
 import CreateBallot from './ballot/CreateBallot';
 import BallotPreview from './ballot/BallotPreview';
 import MyBallotPreview from './ballot/MyBallotPreview';
-import { InstantRunoffExplainer } from './explanation/InstantRunoffExplainer';
+import CopelandExplainer from './explanation/CopelandExplainer';
 import { IdentityContext, IdentityService } from '../userIdentity';
 import './ViewRetrievedPoll.css';
 
@@ -135,7 +135,7 @@ class ViewRetrievedPoll extends Component<Props, State> {
         {
           this.props.ballots.length > 0
             ? (
-              <InstantRunoffExplainer
+              <CopelandExplainer
                 isClosed={!!this.props.poll.close}
                 ballots={this.props.ballots}
               />

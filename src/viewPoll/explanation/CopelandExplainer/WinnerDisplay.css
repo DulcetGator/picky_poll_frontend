@@ -1,0 +1,24 @@
+.WinnerDisplay {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.WinnerDisplay ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.WinnerDisplay ul li {
+  display: inline-block;
+}
+
+.winner-label {
+  display: inline;
+  font-weight: bold;
+}
+
+.winner-label, .winner {
+  margin: 0 0.5em;
+}

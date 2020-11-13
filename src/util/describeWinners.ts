@@ -1,17 +1,16 @@
-export function describeWinners(isClosed: boolean, winners: Set<string>) {
-  const winnersArray = Array.from(winners);
+export function describeWinners(isClosed: boolean, winners: string[]) {
   if (isClosed) {
-    if (winnersArray.length <= 1) {
-      return `Winner: ${winnersArray[0]}`;
-    } if (winnersArray.length <= 2) {
-      return `Winners (tied): ${winnersArray.join(', ')}`;
+    if (winners.length <= 1) {
+      return `Winner: ${winners[0]}`;
+    } if (winners.length <= 2) {
+      return `Winners (tied): ${winners.join(', ')}`;
     }
-    return `Winner: ${winnersArray.length}-way tie`;
+    return `Winner: ${winners.length}-way tie`;
   }
-  if (winnersArray.length <= 1) {
-    return `Current winner: ${winnersArray[0]}`;
-  } if (winnersArray.length <= 2) {
-    return `Current winners (tied): ${winnersArray.join(', ')}`;
+  if (winners.length <= 1) {
+    return `Current winner: ${winners[0]}`;
+  } if (winners.length <= 2) {
+    return `Current winners (tied): ${winners.join(', ')}`;
   }
-  return `Current winner: ${winnersArray.length}-way tie`;
+  return `Current winner: ${winners.length}-way tie`;
 }

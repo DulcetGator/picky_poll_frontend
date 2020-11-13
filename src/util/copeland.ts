@@ -1,10 +1,10 @@
-type CopelandPairwiseResult = {
+export type CopelandPairwiseResult = {
   competitor: string,
   votes: number,
   competitorVotes: number
 }
 
-type CopelandRanking = {
+export type CopelandRanking = {
   ranking: number,
   winCount: number,
   candidates: {

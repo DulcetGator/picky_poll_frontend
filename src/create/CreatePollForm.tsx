@@ -19,7 +19,7 @@ type State = {
 };
 
 class CreatePollForm extends Component<Props, State> {
-  lastCandidate = 0;
+  lastCandidate = 1;
 
   static contextType: Context<IdentityService> = IdentityContext;
 
