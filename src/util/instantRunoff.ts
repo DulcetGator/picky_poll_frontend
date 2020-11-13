@@ -12,34 +12,29 @@ export type InstantRunoffResult = {
 
 function countVotes(
   candidates: string[],
-  ballots: string[][]
+  ballots: string[][],
 ) {
-
-  const validCandidates: Set<string> = new Set(candidates)
-  const firstEligibleChoice: string[] = ballots.flatMap(ballot => {
-    const eligible = ballot.filter(candidate => validCandidates.has(candidate))
-    return eligible.length > 0 ? [eligible[0]] : []
-  })
+  const validCandidates: Set<string> = new Set(candidates);
+  const firstEligibleChoice: string[] = ballots.flatMap((ballot) => {
+    const eligible = ballot.filter((candidate) => validCandidates.has(candidate));
+    return eligible.length > 0 ? [eligible[0]] : [];
+  });
 
   const initialCandidateCounts: Map<string, number> = new Map(
-    candidates.map(c => [c, 0])
-  )
-  firstEligibleChoice.forEach(c =>
-    initialCandidateCounts.set(c, (initialCandidateCounts.get(c) || 0) + 1)
-  )
+    candidates.map((c) => [c, 0]),
+  );
+  firstEligibleChoice.forEach((c) => initialCandidateCounts.set(c, (initialCandidateCounts.get(c) || 0) + 1));
 
-  const rankings: Map<number, Set<string>> = new Map()
+  const rankings: Map<number, Set<string>> = new Map();
   Array.from(initialCandidateCounts).forEach(([candidate, count]) => {
     if (rankings.has(count)) {
-      (rankings.get(count) as Set<string>).add(candidate)
+      (rankings.get(count) as Set<string>).add(candidate);
     } else {
-      rankings.set(count, new Set([candidate]))
+      rankings.set(count, new Set([candidate]));
     }
-  })
+  });
 
-  return Array.from(rankings).map(([count, candidates]) => {
-    return {count: count, candidates: candidates}
-  }).sort((a, b) => (a.count - b.count))
+  return Array.from(rankings).map(([count, candidates]) => ({ count, candidates })).sort((a, b) => (a.count - b.count));
 }
 
 function explainStvRec(
@@ -49,40 +44,36 @@ function explainStvRec(
 ): InstantRunoffRound[] {
   const candidateCounts = countVotes(
     candidates,
-    ballots
-  )
+    ballots,
+  );
   if (candidateCounts.length === 0) {
-    return priorPhases
-  } else {
-    const eliminated = new Set<string>()
-    candidateCounts[0].candidates.forEach(c =>
-      eliminated.add(c)
-    )
-    const nextPhase: InstantRunoffRound = {
-      candidateCounts: candidateCounts,
-    }
-    priorPhases.splice(priorPhases.length, 0, nextPhase)
-    return explainStvRec(
-      priorPhases,
-      candidates.filter(c => !eliminated.has(c)),
-      ballots
-    )
+    return priorPhases;
   }
+  const eliminated = new Set<string>();
+  candidateCounts[0].candidates.forEach((c) => eliminated.add(c));
+  const nextPhase: InstantRunoffRound = {
+    candidateCounts,
+  };
+  priorPhases.splice(priorPhases.length, 0, nextPhase);
+  return explainStvRec(
+    priorPhases,
+    candidates.filter((c) => !eliminated.has(c)),
+    ballots,
+  );
 }
 
 export function instantRunoff(ballots: string[][]): InstantRunoffResult {
   const allCandidates: string[] = Array.from(new Set(ballots
     .flat()
-    .sort()
-  ).values())
+    .sort()).values());
 
-  const rounds = explainStvRec([], allCandidates, ballots)
-  let winners = new Set<string>()
+  const rounds = explainStvRec([], allCandidates, ballots);
+  let winners = new Set<string>();
   if (rounds.length > 0) {
-    winners = rounds[rounds.length - 1].candidateCounts[0].candidates
+    winners = rounds[rounds.length - 1].candidateCounts[0].candidates;
   }
   return {
-    winners: winners,
-    rounds: rounds,
-  }
+    winners,
+    rounds,
+  };
 }

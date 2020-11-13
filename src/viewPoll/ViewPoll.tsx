@@ -1,9 +1,8 @@
-import React, { Component, Context } from "react";
-import { getPoll } from "../api";
-import ViewRetrievedPoll from "./ViewRetrievedPoll";
-import { Ballot, Poll } from "../api";
+import React, { Component, Context } from 'react';
+import { getPoll, Ballot, Poll } from '../api';
+import ViewRetrievedPoll from './ViewRetrievedPoll';
 
-import IdentityContext, {IdentityService} from "../userIdentity"
+import IdentityContext, { IdentityService } from '../userIdentity';
 
 type Props = {
   pollId: string
@@ -15,8 +14,8 @@ type State = {
 };
 
 class ViewPoll extends Component<Props, State> {
-
   static contextType: Context<IdentityService> = IdentityContext;
+
   context!: IdentityService
 
   constructor(props: Props) {
@@ -30,26 +29,33 @@ class ViewPoll extends Component<Props, State> {
 
   render() {
     if (this.state.poll != null) {
-      return <ViewRetrievedPoll
-        poll={this.state.poll}
-        ballots={this.state.ballots}
-        onSubmitNewBallot={b => this.handleSubmitNewBallot(b)}/>;
-    } else {
-      return <span>No poll with id {this.props.pollId}</span>;
+      return (
+        <ViewRetrievedPoll
+          poll={this.state.poll}
+          ballots={this.state.ballots}
+          onSubmitNewBallot={(b) => this.handleSubmitNewBallot(b)}
+        />
+      );
     }
+    return (
+      <span>
+        No poll with id
+        {this.props.pollId}
+      </span>
+    );
   }
 
   async getPoll() {
-    let response = await getPoll(this.props.pollId);
+    const response = await getPoll(this.props.pollId);
     if (response) {
-      this.context.addKnownPoll(response.poll, false)
+      this.context.addKnownPoll(response.poll, false);
       this.setState({ poll: response.poll, ballots: response.ballots });
     }
   }
 
   handleSubmitNewBallot(b: Ballot) {
-    const ballots = [...this.state.ballots, b]
-    this.setState(Object.assign({}, this.state, {ballots: ballots}))
+    const ballots = [...this.state.ballots, b];
+    this.setState({ ...this.state, ballots });
   }
 }
 

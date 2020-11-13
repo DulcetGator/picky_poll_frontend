@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-import { Card } from 'react-bootstrap'
-import {shallowArrayEq} from '../util/array'
-import "./Ranker.css";
+import React, { Component } from 'react';
+import {
+  DragDropContext, Draggable, Droppable, DropResult,
+} from 'react-beautiful-dnd';
+import { Card } from 'react-bootstrap';
+import { shallowArrayEq } from '../util/array';
+import './Ranker.css';
 
 type CandidateProps = {
   name: string,
@@ -23,22 +25,23 @@ class Candidate extends Component<CandidateProps, CandidateState> {
 
   render() {
     return (
-      <div className={"candidate-wrapper"}>
+      <div className="candidate-wrapper">
         <Draggable
           draggableId={this.props.name}
-          index={this.props.index}>
-            {provided =>
-              <div
-                className={"candidate"}
-                ref = {provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                >
-                <Card>
-                  {this.props.name}
-                </Card>
-              </div>
-            }
+          index={this.props.index}
+        >
+          {(provided) => (
+            <div
+              className="candidate"
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <Card>
+                {this.props.name}
+              </Card>
+            </div>
+          )}
         </Draggable>
       </div>
     );
@@ -55,44 +58,45 @@ type State = {
 }
 
 class Ranker extends Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
-    this.state = this.getStateFromProps()
+    this.state = this.getStateFromProps();
   }
 
   componentDidUpdate() {
     if (!shallowArrayEq(this.state.orderedCandidates, this.props.candidates)) {
-      this.setState(this.getStateFromProps())
+      this.setState(this.getStateFromProps());
     }
   }
 
   getStateFromProps(): State {
     return {
-      orderedCandidates: [...this.props.candidates]
-    }
+      orderedCandidates: [...this.props.candidates],
+    };
   }
 
   render() {
     return (
-      <div className="candidate-list" >
+      <div className="candidate-list">
         <DragDropContext
-          onDragEnd={dropResult => this.handleCandidateDrop(dropResult)}>
+          onDragEnd={(dropResult) => this.handleCandidateDrop(dropResult)}
+        >
           <Droppable droppableId="candidate-list-droppable">
-            { provided =>
+            { (provided) => (
               <div
-                ref = {provided.innerRef}
-                {...provided.droppableProps}>
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
                 {this.props.candidates.map((candidate, i) => (
                   <Candidate
                     key={candidate}
                     name={candidate}
-                    index = {i}
+                    index={i}
                   />
                 ))}
                 {provided.placeholder}
               </div>
-            }
+            )}
           </Droppable>
         </DragDropContext>
       </div>
@@ -101,14 +105,15 @@ class Ranker extends Component<Props, State> {
 
   handleCandidateDrop(result: DropResult) {
     if (!result.destination) {
-      return
+      return;
     }
-    
+
     this.state.orderedCandidates.splice(
       result.destination.index,
       0,
-      this.state.orderedCandidates.splice(result.source.index, 1)[0])
-    this.props.onUpdateCandidates(this.state.orderedCandidates)
+      this.state.orderedCandidates.splice(result.source.index, 1)[0],
+    );
+    this.props.onUpdateCandidates(this.state.orderedCandidates);
   }
 }
 

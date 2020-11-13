@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Button, Card } from 'react-bootstrap'
-import { Poll, Ballot} from "../../api"
-import EditBallot from './EditBallot'
+import React, { Component } from 'react';
+import { Button, Card } from 'react-bootstrap';
+import { Poll, Ballot } from '../../api';
+import EditBallot from './EditBallot';
 
-import './MyBallotPreview.css'
+import './MyBallotPreview.css';
 
 type MyBallotReadOnlyProps = {
   ballot: Ballot,
@@ -11,9 +11,7 @@ type MyBallotReadOnlyProps = {
 }
 
 function MyBallotReadOnly(props: MyBallotReadOnlyProps) {
-  const rankings = props.ballot.rankings.map(candidate =>
-    <li key={candidate}>{candidate}</li>
-  );
+  const rankings = props.ballot.rankings.map((candidate) => <li key={candidate}>{candidate}</li>);
 
   return (
     <Card className="MyBallotPreview">
@@ -54,28 +52,31 @@ export default class MyBallotPreview extends Component<Props, State> {
 
   handleSubmitBallot(ballot: Ballot) {
     this.setState({
-      ballot: ballot,
-      isEditing: false
+      ballot,
+      isEditing: false,
     });
   }
 
   handleEdit() {
-    this.setState({isEditing: true});
+    this.setState({ isEditing: true });
   }
 
   render() {
     if (this.state.isEditing) {
-      return <EditBallot
-        poll={this.props.poll}
-        ballotKey={this.props.ballotKey}
-        ballot={this.state.ballot} 
-        onSubmitBallot={ballot => this.handleSubmitBallot(ballot)}
-      />;
-    } else {
-      return <MyBallotReadOnly 
+      return (
+        <EditBallot
+          poll={this.props.poll}
+          ballotKey={this.props.ballotKey}
+          ballot={this.state.ballot}
+          onSubmitBallot={(ballot) => this.handleSubmitBallot(ballot)}
+        />
+      );
+    }
+    return (
+      <MyBallotReadOnly
         ballot={this.state.ballot}
         onEdit={() => this.handleEdit()}
       />
-    }
+    );
   }
 }

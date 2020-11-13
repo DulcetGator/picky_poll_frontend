@@ -1,49 +1,51 @@
-import React, { Component } from "react";
-import { ListGroup } from 'react-bootstrap'
-import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
-import "./App.css";
-import { About } from './about/About'
-import Home from './home/Home'
-import { ListPolls } from './list/ListPolls'
-import ViewPoll from './viewPoll/ViewPoll'
-import CreatePollForm from './create/CreatePollForm'
-import { LocalStoreIdentityService } from "./userIdentity";
+import React, { Component, ReactNode } from 'react';
+import { ListGroup } from 'react-bootstrap';
+import {
+  BrowserRouter as Router, Link, Redirect, Route, Switch,
+} from 'react-router-dom';
+import './App.css';
+import { About } from './about/About';
+import Home from './home/Home';
+import { ListPolls } from './list/ListPolls';
+import ViewPoll from './viewPoll/ViewPoll';
+import CreatePollForm from './create/CreatePollForm';
+import { LocalStoreIdentityService } from './userIdentity';
 
-type Props = {};
+type Props = unknown;
 type State = {
   identityService: LocalStoreIdentityService
 }
 
 class App extends Component<Props, State> {
   constructor(props: Props) {
-    super(props)
+    super(props);
     this.state = {
-      identityService: new LocalStoreIdentityService()
-    }
+      identityService: new LocalStoreIdentityService(),
+    };
   }
 
-  navLinks() {
+  private navLinks() {
     return [
-      {path: '/polls', name: 'View Polls'},
-      {path: '/create', name: 'Create Poll'},
-      {path: '/about', name: 'About'},
-    ]
+      { path: '/polls', name: 'View Polls' },
+      { path: '/create', name: 'Create Poll' },
+      { path: '/about', name: 'About' },
+    ];
   }
 
-  render() {
+  render(): ReactNode {
     return (
       <div className="App">
         <Router>
           <header className="App-header">
             <div className="app-name">Picky Poll</div>
             <ListGroup horizontal>
-              {this.navLinks().map(l =>
+              {this.navLinks().map((l) => (
                 <Link to={l.path} key={l.name}>
                   <ListGroup.Item>
                     {l.name}
                   </ListGroup.Item>
                 </Link>
-              )}
+              ))}
             </ListGroup>
           </header>
           <Switch>
@@ -59,19 +61,16 @@ class App extends Component<Props, State> {
   }
 }
 
-class HomeRoute extends Component<{}, {}> {
-  render() {
-    return <Home />
-  }
+function HomeRoute() {
+  return <Home />;
 }
 
 function ListPollRoute() {
-  return <ListPolls />
+  return <ListPolls />;
 }
-  
 
-class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
-  constructor(props: {}) {
+class CreatePollRoute extends Component<unknown, { poll?: { id: string } }> {
+  constructor(props: unknown) {
     super(props);
 
     this.state = { poll: undefined };
@@ -79,17 +78,16 @@ class CreatePollRoute extends Component<{}, { poll?: { id: string } }> {
 
   render() {
     return this.state.poll ? (
-      <Redirect to={`/polls/${this.state.poll.id}`} push={true} />
+      <Redirect to={`/polls/${this.state.poll.id}`} push />
     ) : (
-      <CreatePollForm onCreatePoll={p => {
+      <CreatePollForm onCreatePoll={(p) => {
         this.setState({ poll: p });
-      }}/>
+      }}
+      />
     );
   }
 }
 
-const PollDetailsRoute = ({ match: {params: {pollId} } }: {match: {params: {pollId: string }}}) => {
-  return <ViewPoll pollId={pollId} />
-};
+const PollDetailsRoute = ({ match: { params: { pollId } } }: {match: {params: {pollId: string }}}) => <ViewPoll pollId={pollId} />;
 
 export default App;

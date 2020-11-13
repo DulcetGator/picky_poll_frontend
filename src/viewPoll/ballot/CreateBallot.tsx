@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
-import { Button, Card, FormControl, InputGroup } from 'react-bootstrap'
-import Ranker from '../Ranker'
-import { Poll, Ballot} from '../../api'
-import { postBallot } from '../../api'
-import shuffle from '../../util/shuffle'
+import React, { Component } from 'react';
+import {
+  Button, Card, FormControl, InputGroup,
+} from 'react-bootstrap';
+import Ranker from '../Ranker';
+import { Poll, Ballot, postBallot } from '../../api';
+import crypto from 'crypto';
+import shuffle from '../../util/shuffle';
 
-import './CreateBallot.css'
+import './CreateBallot.css';
 
-let crypto = require("crypto")
 
 type Props = {
   poll: Poll,
@@ -25,7 +26,7 @@ class CreateBallot extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      ballot: this.makeNewBallot()
+      ballot: this.makeNewBallot(),
     };
   }
 
@@ -36,20 +37,22 @@ class CreateBallot extends Component<Props, State> {
           <InputGroup>
             <FormControl
               placeholder="Name or alias"
-              onChange={e => this.onUpdateVoterName(e.target.value)} />
+              onChange={(e) => this.onUpdateVoterName(e.target.value)}
+            />
           </InputGroup>
         </Card.Header>
         <Ranker
           candidates={this.state.ballot.rankings}
-          onUpdateCandidates={e => this.onUpdateCandidates(e)}
-          />
+          onUpdateCandidates={(e) => this.onUpdateCandidates(e)}
+        />
         <p>
           Your ballot, including your name, will be visible to all viewers of this poll.
         </p>
         <Button
-          onClick={e => this.handleSubmit(e)}
-          className="submit-button">
-            Submit
+          onClick={() => this.handleSubmit()}
+          className="submit-button"
+        >
+          Submit
         </Button>
       </Card>
     );
@@ -57,40 +60,37 @@ class CreateBallot extends Component<Props, State> {
 
   onUpdateCandidates(candidates: string[]) {
     this.setState({
-      ballot: Object.assign({}, this.state.ballot, {rankings: candidates})
+      ballot: { ...this.state.ballot, rankings: candidates },
     });
   }
 
   onUpdateVoterName(name: string) {
     this.setState({
-      ballot: Object.assign({}, this.state.ballot, {name: name})
+      ballot: { ...this.state.ballot, name },
     });
   }
 
-  async handleSubmit(event: React.MouseEvent) {
-
+  async handleSubmit() {
     await postBallot(
       this.props.ballotKey,
       this.props.poll.id,
       this.state.ballot.id,
       this.state.ballot.name,
-      this.state.ballot.rankings
+      this.state.ballot.rankings,
     );
 
-    this.props.onSubmitBallot(this.state.ballot)
+    this.props.onSubmitBallot(this.state.ballot);
   }
 
   makeNewBallot(): Ballot {
-    let ballot: Ballot = {
+    const ballot: Ballot = {
       name: '',
       id: crypto.randomBytes(32).toString('hex'),
       rankings: shuffle(this.props.poll.candidates.slice(0)),
-      timestamp: Date.now()
-    }
+      timestamp: Date.now(),
+    };
     return ballot;
   }
-
-
 }
 
 export default CreateBallot;

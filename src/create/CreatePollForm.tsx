@@ -1,8 +1,10 @@
-import React, { Component, Context } from "react";
-import { Button, Col, Form, FormControl, InputGroup, Row } from 'react-bootstrap'
-import { createPoll } from "../api";
-import IdentityContext, {IdentityService} from "../userIdentity"
-import './CreatePollForm.css'
+import React, { Component, Context, ReactNode } from 'react';
+import {
+  Button, Col, Form, FormControl, InputGroup, Row,
+} from 'react-bootstrap';
+import { createPoll } from '../api';
+import IdentityContext, { IdentityService } from '../userIdentity';
+import './CreatePollForm.css';
 
 type Props = {
   onCreatePoll: ({ id } : {id: string}) => void
@@ -17,9 +19,10 @@ type State = {
 };
 
 class CreatePollForm extends Component<Props, State> {
-  lastCandidate: number = 0;
+  lastCandidate = 0;
 
   static contextType: Context<IdentityService> = IdentityContext;
+
   context!: IdentityService;
 
   constructor(props: Props) {
@@ -27,45 +30,46 @@ class CreatePollForm extends Component<Props, State> {
 
     this.state = {
       description: '',
-      candidates: [{key: 0, name: ''}]
+      candidates: [{ key: 0, name: '' }],
     };
   }
 
   isValid(): boolean {
     const candidateNames = this.state.candidates
-      .map(c => c.name)
-      .filter(c => c.length > 0)
+      .map((c) => c.name)
+      .filter((c) => c.length > 0);
     const hasDuplicates = new Set(candidateNames).size
       < candidateNames.length;
 
-    return this.state.description.length > 0 &&
-      candidateNames.length >= 2 &&
-      !hasDuplicates
+    return this.state.description.length > 0
+      && candidateNames.length >= 2
+      && !hasDuplicates;
   }
 
-  render() {
-    let answers = this.state.candidates.map((candidate, index) => (
+  render(): ReactNode {
+    const answers = this.state.candidates.map((candidate, index) => (
       <li key={candidate.key}>
-          <InputGroup>
-            <InputGroup.Prepend>
-              <Button
-                variant="secondary"
-                type="button"
-                onClick={e => this.handleDeleteCandidate(index)}>
-                Remove
-              </Button>
-            </InputGroup.Prepend>
-            <FormControl
-              onChange={e => this.handleCandidateChange(index, e.currentTarget.value)}
-              placeholder={"Choice #" + (index + 1)}
-            />
+        <InputGroup>
+          <InputGroup.Prepend>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => this.handleDeleteCandidate(index)}
+            >
+              Remove
+            </Button>
+          </InputGroup.Prepend>
+          <FormControl
+            onChange={(e) => this.handleCandidateChange(index, e.currentTarget.value)}
+            placeholder={`Choice #${index + 1}`}
+          />
         </InputGroup>
       </li>
     ));
 
     return (
-      <div className="CreatePollForm" >
-        <form onSubmit={e => this.handleSubmit(e)}>
+      <div className="CreatePollForm">
+        <form onSubmit={(e) => this.handleSubmit(e)}>
           <Form.Group as={Row} controlId="DescriptionInput">
             <Form.Label column sm="auto">
               Question
@@ -75,7 +79,7 @@ class CreatePollForm extends Component<Props, State> {
                 as="textarea"
                 placeholder="What is your preference among the following choices?"
                 value={this.state.description}
-                onChange={e => this.handleDescriptionChange(e.currentTarget.value)}
+                onChange={(e) => this.handleDescriptionChange(e.currentTarget.value)}
               />
             </Col>
           </Form.Group>
@@ -85,7 +89,8 @@ class CreatePollForm extends Component<Props, State> {
               <Button
                 variant="secondary"
                 type="button"
-                onClick={e => this.handleCreateCandidate()} >
+                onClick={() => this.handleCreateCandidate()}
+              >
                 New Choice
               </Button>
             </div>
@@ -93,7 +98,8 @@ class CreatePollForm extends Component<Props, State> {
               <Button
                 variant="primary"
                 type="submit"
-                disabled={!this.isValid()}>
+                disabled={!this.isValid()}
+              >
                 Create
               </Button>
             </div>
@@ -103,57 +109,57 @@ class CreatePollForm extends Component<Props, State> {
     );
   }
 
-  handleDescriptionChange(newDescription: string) {
+  private handleDescriptionChange(newDescription: string): void {
     this.setState({
-      description: newDescription.trim()
+      description: newDescription.trim(),
     });
-  };
+  }
 
-  async handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  private async handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
-    let poll = await createPoll(
+    const poll = await createPoll(
       this.context.getKey(),
       this.state.description,
       this.state.candidates
-        .map(c => c.name)
-        .filter(n => n.length > 0),
+        .map((c) => c.name)
+        .filter((n) => n.length > 0),
     );
 
     this.context.addKnownPoll(poll, true);
-    
+
     this.props.onCreatePoll(poll);
-  };
+  }
 
   handleCandidateChange(index: number, newName: string): void {
-    let changedCandidate = {
+    const changedCandidate = {
       key: this.state.candidates[index].key,
-      name: newName.trim()
+      name: newName.trim(),
     };
-    let newCandidates = this.state.candidates
+    const newCandidates = this.state.candidates
       .slice(0, index)
       .concat(changedCandidate)
       .concat(this.state.candidates.slice(index + 1));
     this.setState({ candidates: newCandidates });
-  };
+  }
 
-  handleCreateCandidate() {
+  private handleCreateCandidate(): void {
     this.setState({
       candidates: this.state.candidates.concat([
         {
           key: ++this.lastCandidate,
-          name: ""
-        }
-      ])
+          name: '',
+        },
+      ]),
     });
-  };
+  }
 
-  handleDeleteCandidate(index: number): void {
-    let newCandidates = this.state.candidates
+  private handleDeleteCandidate(index: number): void {
+    const newCandidates = this.state.candidates
       .slice(0, index)
       .concat(this.state.candidates.slice(index + 1));
     this.setState({ candidates: newCandidates });
-  };
+  }
 }
 
 export default CreatePollForm;

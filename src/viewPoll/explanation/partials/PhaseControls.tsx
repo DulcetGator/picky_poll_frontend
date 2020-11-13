@@ -1,6 +1,6 @@
-import React from 'react'
-import { Pagination } from 'react-bootstrap'
-import './PhaseControls.css'
+import React from 'react';
+import { Pagination } from 'react-bootstrap';
+import './PhaseControls.css';
 
 type Props = {
   isFirst: boolean,
@@ -12,20 +12,26 @@ type Props = {
 }
 
 export function PhaseControls(props: Props) {
-  return <div className="PhaseControls">
-    <Pagination>
-      <Pagination.First
-        disabled={props.isFirst}
-        onClick={e => props.onFirst()} />
-      <Pagination.Prev
-        disabled={props.isFirst}
-        onClick={e => props.onPrev()} />
-      <Pagination.Next
-        disabled={props.isLast}
-        onClick={e => props.onNext()} />
-      <Pagination.Last
-        disabled={props.isLast}
-        onClick={e => props.onLast()} />
-    </Pagination>
-  </div>
+  return (
+    <div className="PhaseControls">
+      <Pagination>
+        <Pagination.First
+          disabled={props.isFirst}
+          onClick={() => props.onFirst()}
+        />
+        <Pagination.Prev
+          disabled={props.isFirst}
+          onClick={() => props.onPrev()}
+        />
+        <Pagination.Next
+          disabled={props.isLast}
+          onClick={() => props.onNext()}
+        />
+        <Pagination.Last
+          disabled={props.isLast}
+          onClick={() => props.onLast()}
+        />
+      </Pagination>
+    </div>
+  );
 }

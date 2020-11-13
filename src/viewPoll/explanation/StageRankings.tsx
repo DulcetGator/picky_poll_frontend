@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 type Props = {
   rankings: string[][]
@@ -7,17 +7,24 @@ type Props = {
 function StageRankings(props: Props) {
   function place(candidates: string[]) {
     if (candidates.length === 1) {
-      return <li>
-        {candidates[0]}
-      </li>
-    } else {
-      return <li>
-        Tie! {candidates.join(', ')}
-      </li>
+      return (
+        <li>
+          {candidates[0]}
+        </li>
+      );
     }
+    return (
+      <li>
+        Tie!
+        {' '}
+        {candidates.join(', ')}
+      </li>
+    );
   }
 
-  return <ol>
-    {props.rankings.map(r => place(r))}
-  </ol>
+  return (
+    <ol>
+      {props.rankings.map((r) => place(r))}
+    </ol>
+  );
 }

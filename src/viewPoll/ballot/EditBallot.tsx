@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Button, Card } from 'react-bootstrap'
-import Ranker from "../Ranker";
-import { Poll, Ballot} from "../../api"
-import { postBallot } from "../../api";
-import shuffle from '../../util/shuffle'
+import React, { Component } from 'react';
+import { Button, Card } from 'react-bootstrap';
+import Ranker from '../Ranker';
+import { Poll, Ballot, postBallot } from '../../api';
+
+import shuffle from '../../util/shuffle';
 
 type Props = {
   poll: Poll,
@@ -20,10 +20,10 @@ type State = {
 class CreateBallot extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    let newChoices = props.poll.candidates.filter(c => props.ballot.rankings.indexOf(c) < 0);
-    newChoices = shuffle(newChoices)
+    let newChoices = props.poll.candidates.filter((c) => props.ballot.rankings.indexOf(c) < 0);
+    newChoices = shuffle(newChoices);
     this.state = {
-      rankings: props.ballot.rankings.concat(newChoices)
+      rankings: props.ballot.rankings.concat(newChoices),
     };
   }
 
@@ -36,12 +36,13 @@ class CreateBallot extends Component<Props, State> {
         <Card.Body>
           <Ranker
             candidates={this.state.rankings}
-            onUpdateCandidates={e => this.handleUpdateCandidates(e)}
+            onUpdateCandidates={(e) => this.handleUpdateCandidates(e)}
           />
           <Button
             variant="primary"
-            onClick={e => this.handleSubmit(e)} >
-              Submit Changes
+            onClick={(e) => this.handleSubmit(e)}
+          >
+            Submit Changes
           </Button>
         </Card.Body>
       </Card>
@@ -49,7 +50,7 @@ class CreateBallot extends Component<Props, State> {
   }
 
   handleUpdateCandidates(candidates: string[]) {
-    this.setState(Object.assign({}, {rankings: candidates}));
+    this.setState({ rankings: candidates });
   }
 
   async handleSubmit(event: React.FormEvent<HTMLElement>) {
@@ -60,10 +61,10 @@ class CreateBallot extends Component<Props, State> {
       this.props.poll.id,
       this.props.ballot.id,
       this.props.ballot.name,
-      this.state.rankings
+      this.state.rankings,
     );
 
-    let newBallot = Object.assign({}, this.props.ballot, {rankings: this.state.rankings});
+    const newBallot = { ...this.props.ballot, rankings: this.state.rankings };
 
     this.props.onSubmitBallot(newBallot);
   }

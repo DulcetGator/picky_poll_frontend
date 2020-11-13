@@ -8,7 +8,7 @@ RUN yarn install
 
 COPY public ./public
 COPY src ./src
-copy tsconfig.json ./
+COPY tsconfig.json ./
 
 RUN yarn build
 

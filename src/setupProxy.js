@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const proxy = require('http-proxy-middleware');
 
 const isProd = process.env.BACKEND_ENV === 'prod';

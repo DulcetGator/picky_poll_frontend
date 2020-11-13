@@ -19,45 +19,44 @@ export type GetPollResponse = {
 }
 
 async function createPoll(key: string, description: string, options: string[]): Promise<Poll> {
-  return fetch("/api/polls", {
+  return fetch('/api/polls', {
     headers: {
-      "content-type": "application/json",
-      "X-VOTE-SECRET": key
+      'content-type': 'application/json',
+      'X-VOTE-SECRET': key,
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
-      description: description,
-      candidates: options
-    })
-  }).then(r => r.json());
+      description,
+      candidates: options,
+    }),
+  }).then((r) => r.json());
 }
 
 async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[])
 : Promise<Response> {
   return fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
     headers: {
-      "content-type": "application/json",
-      "X-VOTE-SECRET": key
+      'content-type': 'application/json',
+      'X-VOTE-SECRET': key,
     },
-    method: "PUT",
+    method: 'PUT',
     body: JSON.stringify({
-      name: name,
-      rankings: rankings
-    })
+      name,
+      rankings,
+    }),
   });
 }
 
 async function getPoll(pollId: string): Promise<GetPollResponse | null> {
-  let response = await fetch(`/api/polls/${pollId}`, {
+  const response = await fetch(`/api/polls/${pollId}`, {
     headers: {
-      "content-type": "application/json"
-    }
-  })
+      'content-type': 'application/json',
+    },
+  });
   if (response.ok) {
     return await response.json();
-  } else {
-    return null;
   }
+  return null;
 }
 
 export { createPoll, postBallot, getPoll };
