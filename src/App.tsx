@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import {
   BrowserRouter as Router, Link, Redirect, Route, Switch,
 } from 'react-router-dom';
@@ -37,16 +37,19 @@ class App extends Component<Props, State> {
       <div className="App">
         <Router>
           <header className="App-header">
-            <div className="app-name">Picky Poll</div>
-            <ListGroup horizontal>
-              {this.navLinks().map((l) => (
-                <Link to={l.path} key={l.name}>
-                  <ListGroup.Item>
+
+            <Navbar variant="dark">
+              <Navbar.Brand>
+              <div className="app-name">Picky Poll</div>
+              </Navbar.Brand>
+              <Nav>
+                {this.navLinks().map((l) => (
+                  <Nav.Link as={Link} to={l.path} key={l.name}>
                     {l.name}
-                  </ListGroup.Item>
-                </Link>
-              ))}
-            </ListGroup>
+                  </Nav.Link>
+                ))}
+              </Nav>
+            </Navbar>
           </header>
           <Switch>
             <Route path="/about" component={About} />
