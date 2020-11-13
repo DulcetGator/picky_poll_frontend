@@ -30,7 +30,7 @@ class CreatePollForm extends Component<Props, State> {
 
     this.state = {
       description: '',
-      candidates: [{ key: 0, name: '' }],
+      candidates: [{ key: 0, name: '' }, { key: 1, name: '' }],
     };
   }
 
@@ -111,7 +111,7 @@ class CreatePollForm extends Component<Props, State> {
 
   private handleDescriptionChange(newDescription: string): void {
     this.setState({
-      description: newDescription.trim(),
+      description: newDescription,
     });
   }
 
@@ -134,7 +134,7 @@ class CreatePollForm extends Component<Props, State> {
   handleCandidateChange(index: number, newName: string): void {
     const changedCandidate = {
       key: this.state.candidates[index].key,
-      name: newName.trim(),
+      name: newName,
     };
     const newCandidates = this.state.candidates
       .slice(0, index)
