@@ -12,7 +12,7 @@ test('given two ballots with different 1st choice, returns tie', () => {
   ];
   const result = copeland(ballots);
   expect(result.length).toEqual(1);
-  expect(result[0].winCount).toEqual(0);
+  expect(result[0].score).toEqual(0);
   expect(Array.from(result[0].candidates.map(c => c.candidate)).sort())
     .toEqual(['Vanilla', 'Chocolate'].sort());
 });
@@ -24,7 +24,7 @@ test('when there is a 1st-place tie, ranks the next candidate 3rd', () => {
   ];
   const result = copeland(ballots);
   expect(result.length).toEqual(2)
-  expect(result[0].winCount).toEqual(1)
+  expect(result[0].score).toEqual(1)
   expect(result[0].candidates.map(c => c.candidate).sort())
     .toEqual(['Vanilla', 'Chocolate'].sort())
 });

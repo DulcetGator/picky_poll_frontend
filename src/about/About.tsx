@@ -48,7 +48,7 @@ export function About() {
                 (one specific
                 {' '}
                 <a href={"https://en.wikipedia.org/wiki/Condorcet_method"}>
-                  Condorcet methods
+                  Condorcet method
                 </a>
                 ) to determine the winner and relative rankings.
               </li>

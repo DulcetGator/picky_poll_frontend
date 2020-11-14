@@ -54,7 +54,7 @@ export default function PairwiseTable(props: Props) {
         {stage.ranking}
       </td>
       <td rowSpan={stage.candidates.length}>
-        {stage.winCount}
+        {stage.score}
       </td>
       {candidateRow(stage.candidates[0].candidate, stage.candidates[0].wins)}
     </>
@@ -68,7 +68,7 @@ export default function PairwiseTable(props: Props) {
       <thead>
         <tr>
           <th>Rank</th>
-          <th>Points</th>
+          <th>Score</th>
           <th></th>
           {defeatedCandidates.map((c, i) => <td key={i}>{c}</td>)}
         </tr>

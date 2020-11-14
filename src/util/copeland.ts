@@ -6,7 +6,7 @@ export type CopelandPairwiseResult = {
 
 export type CopelandRanking = {
   ranking: number,
-  winCount: number,
+  score: number,
   candidates: {
     candidate: string,
     wins: CopelandPairwiseResult[]
@@ -45,8 +45,12 @@ export function copeland(ballots: string[][]): CopelandRanking[] {
     })
   })
 
+  const scores: {[id: string] : number} = {}
   const pairwiseWins: {[id: string] : CopelandPairwiseResult[]} = {};
-  candidates.forEach(c => pairwiseWins[c] = [])
+  candidates.forEach(c => {
+    pairwiseWins[c] = []
+    scores[c] = 0
+  })
 
   candidates.forEach((ca, ca_idx) => {
     candidates.slice(ca_idx + 1).forEach((cb) => {
@@ -61,6 +65,8 @@ export function copeland(ballots: string[][]): CopelandRanking[] {
             competitorVotes: cb_votes
           }
         )
+        scores[ca]++
+        scores[cb]--
       } else if (cb_votes > ca_votes) {
         pairwiseWins[cb].push(
           {
@@ -69,35 +75,35 @@ export function copeland(ballots: string[][]): CopelandRanking[] {
             competitorVotes: ca_votes
           }
         )
+        scores[cb]++
+        scores[ca]--
       }
-
     })
   })
 
-  const winnersByWinCount: {[id: number]: {candidate: string, wins: CopelandPairwiseResult[]}[]} = {}
-  Object.entries(pairwiseWins).forEach(([candidate, result]) => {
-    const winCount = result.length
-    if (!winnersByWinCount[winCount]) {
-      winnersByWinCount[winCount] = []
+  const winnersByScore: {[id: number]: {candidate: string, wins: CopelandPairwiseResult[]}[]} = {}
+  Object.entries(scores).forEach(([candidate, score]) => {
+    if (!winnersByScore[score]) {
+      winnersByScore[score] = []
     }
-    winnersByWinCount[winCount].push(
+    winnersByScore[score].push(
       {
         candidate: candidate,
-        wins: result
+        wins: pairwiseWins[candidate]
       }
     )
   })
 
   const results = Object
-    .entries(winnersByWinCount)
-    .map(([count, candidates]) => {
+    .entries(winnersByScore)
+    .map(([score, candidates]) => {
       return {
-        winCount: +count,
+        score: +score,
         candidates: candidates
       }
     })
 
-  results.reverse();
+  results.sort((a, b) => (+b.score) - (+a.score))
 
   let ranking = 1;
   return results.map(r => {
