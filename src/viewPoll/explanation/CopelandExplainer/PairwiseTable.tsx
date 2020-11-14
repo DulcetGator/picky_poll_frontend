@@ -1,6 +1,5 @@
 import React from 'react'
-import { copeland, CopelandPairwiseResult, CopelandRanking } from '../../../util/copeland'
-import WinnerDisplay from './WinnerDisplay'
+import { CopelandPairwiseResult, CopelandRanking } from '../../../util/copeland'
 
 import './CopelandExplainer.css'
 import { Table } from 'react-bootstrap'

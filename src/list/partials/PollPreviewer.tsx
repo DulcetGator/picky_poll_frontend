@@ -1,11 +1,12 @@
 import React, { Component, MouseEvent, ReactNode } from 'react';
-import { Button, Card, Spinner } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { GetPollResponse, getPoll } from '../../api';
 import { KnownPoll } from '../../userIdentity';
 import { PollPreview } from './PollPreview';
 import { RemoveModal } from './RemoveModal';
 import './PollPreviewer.css';
+import BasicSpinner from '../../partials/BasicSpinner';
 
 type Props = {
   knownPoll: KnownPoll,
@@ -76,9 +77,7 @@ export class PollPreviewer extends Component<Props, State> {
         );
       case 'fetching':
         return (
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <BasicSpinner>Loading...</BasicSpinner>
         );
       case 'notfound':
         return (
