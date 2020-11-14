@@ -9,14 +9,25 @@
   flex-direction: row;
   align-items: stretch;
   text-align: left;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.About .intro-cards .card-wrapper {
+  width: 33%;
+  min-width: 20em;
+  padding: 1em;
+  display: flex;
+  align-items: stretch;
 }
 
 .About .intro-cards .card {
-  flex-basis: 33%;
-  padding: 2em;
-  margin: 1em;
+  padding: 1em;
 }
 
+.About .card li {
+  margin-left: 1em;
+}
 
 .About ul {
   list-style: disc;
@@ -24,4 +35,9 @@
 
 .About li {
   text-align: left;
+}
+
+.About .suitable-for-text {
+  margin: auto;
+  max-width: 50em;
 }

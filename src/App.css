@@ -17,6 +17,7 @@
   background-color: #282c34;
   min-height: 5vh;
   font-size: calc(10px + 2vmin);
+  margin-bottom: 1rem;
 }
 
 .App-header .app-name {
