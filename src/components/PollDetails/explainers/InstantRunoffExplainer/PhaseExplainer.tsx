@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { InstantRunoffRound } from '../../../util/instantRunoff';
+import { InstantRunoffRound } from '../../../../util/instantRunoff';
 
 export function PhaseExplainer(props: {round: InstantRunoffRound}) {
   const candidateCounts = [...props.round.candidateCounts].reverse();

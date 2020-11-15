@@ -3,7 +3,7 @@ import {
   DragDropContext, Draggable, Droppable, DropResult,
 } from 'react-beautiful-dnd';
 import { Card } from 'react-bootstrap';
-import { shallowArrayEq } from '../util/array';
+import { shallowArrayEq } from '../../../util/array';
 import './Ranker.css';
 
 type CandidateProps = {

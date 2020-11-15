@@ -1,7 +1,7 @@
 import React, { Component, Context } from 'react';
 import { Card } from 'react-bootstrap';
-import { IdentityContext, IdentityService } from '../../userIdentity';
-import { Ballot } from '../../api';
+import { IdentityContext, IdentityService } from '../../../userIdentity';
+import { Ballot } from '../../../api';
 
 import './BallotPreview.css';
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Ballot } from '../../../api'
-import { copeland } from '../../../util/copeland'
+import { Ballot } from '../../../../api'
+import { copeland } from '../../../../util/copeland'
 import WinnerDisplay from './WinnerDisplay'
 
 import './CopelandExplainer.css'

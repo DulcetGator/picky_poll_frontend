@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import {
   Button, Card, FormControl, InputGroup,
 } from 'react-bootstrap';
-import Ranker from '../Ranker';
-import { Poll, Ballot, postBallot } from '../../api';
+import Ranker from './Ranker';
+import { Poll, Ballot, postBallot } from '../../../api';
 import crypto from 'crypto';
-import shuffle from '../../util/shuffle';
+import shuffle from '../../../util/shuffle';
 
 import './CreateBallot.css';
-import BasicSpinner from '../../partials/BasicSpinner';
-import promiseTimeout from '../../util/promiseTimeout';
+import BasicSpinner from '../../../partials/BasicSpinner';
+import promiseTimeout from '../../../util/promiseTimeout';
 
 
 type Props = {

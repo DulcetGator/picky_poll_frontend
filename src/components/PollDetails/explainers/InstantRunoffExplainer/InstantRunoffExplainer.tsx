@@ -1,9 +1,9 @@
 import React from 'react';
-import { Ballot } from '../../api';
-import { InstantRunoffResult, instantRunoff } from '../../util/instantRunoff';
-import { PhaseControls } from './partials/PhaseControls';
-import { PhaseExplainer } from './partials/PhaseExplainer';
-import { WinnerDisplay } from './WinnerDisplay';
+import { Ballot } from '../../../../api';
+import { InstantRunoffResult, instantRunoff } from '../../../../util/instantRunoff';
+import { PhaseControls } from './PhaseControls';
+import { PhaseExplainer } from './PhaseExplainer';
+import { WinnerDisplay } from '../WinnerDisplay';
 import './InstantRunoffExplainer.css';
 
 type Props = {
@@ -15,7 +15,7 @@ type State = {
   phaseIndex: number
 }
 
-export class InstantRunoffExplainer extends React.Component<Props, State> {
+export default class InstantRunoffExplainer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

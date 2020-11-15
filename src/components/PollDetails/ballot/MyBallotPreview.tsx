@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { Poll, Ballot } from '../../api';
+import { Poll, Ballot } from '../../../api';
 import EditBallot from './EditBallot';
 
 import './MyBallotPreview.css';

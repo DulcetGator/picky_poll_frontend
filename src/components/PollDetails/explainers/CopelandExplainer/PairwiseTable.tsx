@@ -1,5 +1,5 @@
 import React from 'react'
-import { CopelandPairwiseResult, CopelandRanking } from '../../../util/copeland'
+import { CopelandPairwiseResult, CopelandRanking } from '../../../../util/copeland'
 
 import './CopelandExplainer.css'
 import { Table } from 'react-bootstrap'

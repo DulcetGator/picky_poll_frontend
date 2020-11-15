@@ -7,7 +7,7 @@ import './App.css';
 import { About } from './about/About';
 import Home from './home/Home';
 import { ListPolls } from './list/ListPolls';
-import ViewPoll from './viewPoll/ViewPoll';
+import PollDetails from './components/pollDetails';
 import CreatePollForm from './create/CreatePollForm';
 import { LocalStoreIdentityService } from './userIdentity';
 
@@ -90,6 +90,6 @@ class CreatePollRoute extends Component<unknown, { poll?: { id: string } }> {
   }
 }
 
-const PollDetailsRoute = ({ match: { params: { pollId } } }: {match: {params: {pollId: string }}}) => <ViewPoll pollId={pollId} />;
+const PollDetailsRoute = ({ match: { params: { pollId } } }: {match: {params: {pollId: string }}}) => <PollDetails pollId={pollId} />;
 
 export default App;

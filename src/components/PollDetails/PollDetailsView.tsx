@@ -1,24 +1,24 @@
 import React, { Component, Context } from 'react';
 import { Button } from 'react-bootstrap';
-import { Ballot, Poll } from '../api';
+import { Ballot, Poll } from '../../api';
 import CreateBallot from './ballot/CreateBallot';
 import BallotPreview from './ballot/BallotPreview';
 import MyBallotPreview from './ballot/MyBallotPreview';
-import CopelandExplainer from './explanation/CopelandExplainer';
-import { IdentityContext, IdentityService } from '../userIdentity';
-import './ViewRetrievedPoll.css';
+import { CopelandExplainer } from './explainers';
+import { IdentityContext, IdentityService } from '../../userIdentity';
+import './PollDetailsView.css';
 
 type Props = {
   poll: Poll,
   ballots: Ballot[],
-  onSubmitNewBallot: (b: Ballot) => void
+  onSubmitNewBallot: (b: Ballot) => void,
 };
 
 type State = {
-  expandRedundantBallot: boolean
+  expandRedundantBallot: boolean,
 };
 
-class ViewRetrievedPoll extends Component<Props, State> {
+class PollDetailsView extends Component<Props, State> {
   static contextType: Context<IdentityService> = IdentityContext;
 
   context!: IdentityService
@@ -157,4 +157,4 @@ class ViewRetrievedPoll extends Component<Props, State> {
   }
 }
 
-export default ViewRetrievedPoll;
+export default PollDetailsView;

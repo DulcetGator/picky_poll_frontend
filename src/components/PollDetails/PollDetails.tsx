@@ -1,8 +1,8 @@
 import React, { Component, Context } from 'react';
-import { getPoll, Ballot, Poll } from '../api';
-import ViewRetrievedPoll from './ViewRetrievedPoll';
-import IdentityContext, { IdentityService } from '../userIdentity';
-import BasicSpinner from '../partials/BasicSpinner';
+import { getPoll, Ballot, Poll } from '../../api';
+import PollDetailsView from './PollDetailsView';
+import IdentityContext, { IdentityService } from '../../userIdentity';
+import BasicSpinner from '../../partials/BasicSpinner';
 
 type Props = {
   pollId: string
@@ -20,7 +20,7 @@ type State =  OkState | {
   status: "Fetching"
 };
 
-class ViewPoll extends Component<Props, State> {
+class PollDetails extends Component<Props, State> {
   static contextType: Context<IdentityService> = IdentityContext;
 
   context!: IdentityService
@@ -41,7 +41,7 @@ class ViewPoll extends Component<Props, State> {
     }
 
     return (
-      <ViewRetrievedPoll
+      <PollDetailsView
         poll={okState.poll}
         ballots={okState.ballots}
         onSubmitNewBallot={handleSubmitNewBallot}
@@ -79,4 +79,4 @@ class ViewPoll extends Component<Props, State> {
   }
 }
 
-export default ViewPoll;
+export default PollDetails;
