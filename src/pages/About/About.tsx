@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import './About.css';
 
-export function About() {
+export default function About() {
   return (
     <div className="About">
       <h1>Convenient ranked-choice voting</h1>
@@ -20,7 +20,7 @@ export function About() {
                 .
               </li>
               <li>
-                Invite your acquaintances to vote by simply the poll's secret URL.
+                Invite your acquaintances to vote by sharing the poll's secret URL.
               </li>
               <li>
                 Voters rank choices by order of preference, then submit their ballot.
@@ -35,8 +35,7 @@ export function About() {
             </Card.Title>
             <ul>
               <li>
-                Each person with the poll's secret URL sees all ballots that were cast, and can
-                audit the poll.
+                Picky Poll always shows the winner based on the current ballots.
               </li>
               <li>
                 Picky Poll uses
@@ -51,6 +50,10 @@ export function About() {
                   Condorcet method
                 </a>
                 ) to determine the winner and relative rankings.
+              </li>
+              <li>
+                Each person with the poll's secret URL sees all ballots that were cast, and can
+                audit the poll.
               </li>
             </ul>
           </Card>

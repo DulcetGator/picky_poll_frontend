@@ -1,7 +1,7 @@
 import React from 'react';
-import { About } from '../about/About';
-import { ListPolls } from '../list/ListPolls';
-import IdentityContext from '../userIdentity';
+import About from '../About';
+import ListPolls from '../ListPolls';
+import IdentityContext from '../../userIdentity';
 
 export default function Home() {
   const context = React.useContext(IdentityContext);

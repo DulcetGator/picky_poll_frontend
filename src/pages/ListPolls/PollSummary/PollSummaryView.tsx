@@ -1,17 +1,17 @@
 import React from 'react';
-import { KnownPoll } from '../../userIdentity';
-import { GetPollResponse } from '../../api';
-import { describeWinners } from '../../util/describeWinners';
-import { copeland } from '../../util/copeland';
+import { KnownPoll } from '../../../userIdentity';
+import { GetPollResponse } from '../../../api';
+import { describeWinners } from '../../../util/describeWinners';
+import { copeland } from '../../../util/copeland';
 
-import './PollPreview.css';
+import './PollSummaryView.css';
 
 type Props = {
   knownPoll: KnownPoll,
   poll: GetPollResponse,
 }
 
-export function PollPreview(props: Props) {
+export function PollSummaryView(props: Props) {
   const isClosed = !!props.poll.poll.close;
   const voted = (!isClosed) && props.knownPoll.knownBallots.length > 0;
 

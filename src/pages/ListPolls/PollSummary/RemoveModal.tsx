@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { KnownPoll } from '../../userIdentity';
+import { KnownPoll } from '../../../userIdentity';
 
 import './RemoveModal.css';
 

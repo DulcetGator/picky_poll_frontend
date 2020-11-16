@@ -2,9 +2,9 @@ import React, { Component, Context, ReactNode } from 'react';
 import {
   Button, Col, Form, FormControl, InputGroup, Row,
 } from 'react-bootstrap';
-import { createPoll } from '../api';
-import IdentityContext, { IdentityService } from '../userIdentity';
-import './CreatePollForm.css';
+import { createPoll } from '../../api';
+import IdentityContext, { IdentityService } from '../../userIdentity';
+import './CreatePoll.css';
 
 type Props = {
   onCreatePoll: ({ id } : {id: string}) => void
@@ -18,7 +18,7 @@ type State = {
   }[]
 };
 
-class CreatePollForm extends Component<Props, State> {
+export default class CreatePoll extends Component<Props, State> {
   lastCandidate = 1;
 
   static contextType: Context<IdentityService> = IdentityContext;
@@ -161,5 +161,3 @@ class CreatePollForm extends Component<Props, State> {
     this.setState({ candidates: newCandidates });
   }
 }
-
-export default CreatePollForm;

@@ -19,7 +19,7 @@ export type GetPollResponse = {
 }
 
 async function createPoll(key: string, description: string, options: string[]): Promise<Poll> {
-  return fetch('/api/polls', {
+  const response = await fetch('/api/polls', {
     headers: {
       'content-type': 'application/json',
       'X-VOTE-SECRET': key,
@@ -29,12 +29,13 @@ async function createPoll(key: string, description: string, options: string[]): 
       description,
       candidates: options,
     }),
-  }).then((r) => r.json());
+  })
+  return response.json()
 }
 
 async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[])
 : Promise<Response> {
-  return fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
+  return await fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
     headers: {
       'content-type': 'application/json',
       'X-VOTE-SECRET': key,

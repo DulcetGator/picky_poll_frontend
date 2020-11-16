@@ -1,12 +1,13 @@
 import React, { Component, MouseEvent, ReactNode } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { GetPollResponse, getPoll } from '../../api';
-import { KnownPoll } from '../../userIdentity';
-import { PollPreview } from './PollPreview';
+import { GetPollResponse, getPoll } from '../../../api';
+import { KnownPoll } from '../../../userIdentity';
+import { PollSummaryView } from './PollSummaryView';
 import { RemoveModal } from './RemoveModal';
-import './PollPreviewer.css';
-import BasicSpinner from '../../partials/BasicSpinner';
+import BasicSpinner from '../../../partials/BasicSpinner';
+
+import './PollSummary.css';
 
 type Props = {
   knownPoll: KnownPoll,
@@ -23,7 +24,7 @@ type State = {
   removeModal: boolean
 }
 
-export class PollPreviewer extends Component<Props, State> {
+export default class PollSummary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -70,7 +71,7 @@ export class PollPreviewer extends Component<Props, State> {
     switch (this.state.pollState.status) {
       case 'ok':
         return (
-          <PollPreview
+          <PollSummaryView
             poll={this.state.pollState.poll}
             knownPoll={this.props.knownPoll}
           />

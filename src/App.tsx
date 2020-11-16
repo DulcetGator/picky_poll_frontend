@@ -3,13 +3,16 @@ import { Navbar, Nav } from 'react-bootstrap';
 import {
   BrowserRouter as Router, Link, Redirect, Route, Switch,
 } from 'react-router-dom';
-import './App.css';
-import { About } from './about/About';
-import Home from './home/Home';
-import { ListPolls } from './list/ListPolls';
-import PollDetails from './components/pollDetails';
-import CreatePollForm from './create/CreatePollForm';
+import {
+  About,
+  Home,
+  ListPolls,
+  PollDetails,
+  CreatePoll,
+} from './pages';
 import { LocalStoreIdentityService } from './userIdentity';
+
+import './App.css';
 
 type Props = unknown;
 type State = {
@@ -82,7 +85,7 @@ class CreatePollRoute extends Component<unknown, { poll?: { id: string } }> {
     return this.state.poll ? (
       <Redirect to={`/polls/${this.state.poll.id}`} push />
     ) : (
-      <CreatePollForm onCreatePoll={(p) => {
+      <CreatePoll onCreatePoll={(p) => {
         this.setState({ poll: p });
       }}
       />

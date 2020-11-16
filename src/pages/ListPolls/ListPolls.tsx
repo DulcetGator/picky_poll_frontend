@@ -1,7 +1,7 @@
 import React, { Component, Context, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { IdentityContext, IdentityService, KnownPoll } from '../userIdentity';
-import { PollPreviewer } from './partials/PollPreviewer';
+import { IdentityContext, IdentityService, KnownPoll } from '../../userIdentity';
+import PollSummary from './PollSummary';
 import './ListPolls.css';
 
 type Props = unknown
@@ -10,7 +10,7 @@ type State = {
   seenPolls: KnownPoll[]
 }
 
-export class ListPolls extends Component<Props, State> {
+export default class ListPolls extends Component<Props, State> {
   static contextType: Context<IdentityService> = IdentityContext;
 
   context!: React.ContextType<typeof IdentityContext>
@@ -59,7 +59,7 @@ export class ListPolls extends Component<Props, State> {
         <ul>
           {knownPollsSubset.map((kp) => (
             <li key={kp.poll.id}>
-              <PollPreviewer knownPoll={kp} onRemove={(kp) => this.handleRemove(kp)} />
+              <PollSummary knownPoll={kp} onRemove={(kp) => this.handleRemove(kp)} />
             </li>
           ))}
         </ul>
