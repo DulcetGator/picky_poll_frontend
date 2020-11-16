@@ -12,6 +12,13 @@ COPY tsconfig.json ./
 
 RUN yarn build
 
+FROM BUILD as TEST
+ENV CI=true
+COPY .eslintignore ./
+COPY .eslintrc.js ./
+RUN yarn lint
+RUN yarn test
+
 # start app
 FROM nginx:stable-alpine as SERVE
 COPY --from=BUILD /app/build /usr/share/nginx/html

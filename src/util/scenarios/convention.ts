@@ -42,7 +42,9 @@ export const ballots = [
   })
 )
 
-export default {
+const convention = {
   poll,
   ballots,
 }
+
+export default convention
