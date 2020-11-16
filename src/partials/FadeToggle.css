@@ -1,0 +1,9 @@
+.FadeToggle.show {
+  opacity: 1;
+  transition: all 400ms linear;
+}
+
+.FadeToggle.hide {
+  opacity: 0;
+  transition: all 400ms linear;
+}

@@ -6,6 +6,7 @@ import { createPoll } from '../../api';
 import ExampleCreator from './ExampleCreator'
 import IdentityContext, { IdentityService } from '../../userIdentity';
 import './CreatePoll.css';
+import FadeToggle from '../../partials/FadeToggle';
 
 type Props = {
   onCreatePoll: ({ id } : {id: string}) => void
@@ -16,7 +17,8 @@ type State = {
   candidates: {
     key: number,
     name: string,
-  }[]
+  }[],
+  offerExample: boolean,
 };
 
 export default class CreatePoll extends Component<Props, State> {
@@ -32,6 +34,7 @@ export default class CreatePoll extends Component<Props, State> {
     this.state = {
       description: '',
       candidates: [{ key: 0, name: '' }, { key: 1, name: '' }],
+      offerExample: true,
     };
   }
 
@@ -108,7 +111,7 @@ export default class CreatePoll extends Component<Props, State> {
             </div>
           </div>
         </form>
-        <div>
+        <FadeToggle show={this.state.offerExample}>
           Just testing it out? An example poll can be generated for you.
           {' '}
           <ExampleCreator identity={this.context}>
@@ -117,7 +120,7 @@ export default class CreatePoll extends Component<Props, State> {
               >Create example.
             </Button>
           </ExampleCreator>
-        </div>
+        </FadeToggle>
       </div>
     );
   }
@@ -153,7 +156,10 @@ export default class CreatePoll extends Component<Props, State> {
       .slice(0, index)
       .concat(changedCandidate)
       .concat(this.state.candidates.slice(index + 1));
-    this.setState({ candidates: newCandidates });
+    this.setState({
+      candidates: newCandidates,
+      offerExample: false,
+    });
   }
 
   private handleCreateCandidate(): void {
