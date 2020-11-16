@@ -42,7 +42,7 @@ class App extends Component<Props, State> {
           <header className="App-header">
             <Navbar variant="dark">
               <Navbar.Brand>
-              <div className="app-name">Picky Poll</div>
+                <div className="app-name">Picky Poll</div>
               </Navbar.Brand>
               <Nav>
                 {this.navLinks().map((l) => (

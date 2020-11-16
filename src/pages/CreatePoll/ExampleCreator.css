@@ -1,0 +1,9 @@
+.ExampleCreator {
+  display: inline-block;
+}
+.ExampleCreatorModal .spinner-placeholder {
+  margin: auto;
+}
+.ExampleCreatorModal .hide-spinner {
+  visibility: hidden;
+}

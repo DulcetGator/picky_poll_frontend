@@ -3,6 +3,7 @@ import {
   Button, Col, Form, FormControl, InputGroup, Row,
 } from 'react-bootstrap';
 import { createPoll } from '../../api';
+import ExampleCreator from './ExampleCreator'
 import IdentityContext, { IdentityService } from '../../userIdentity';
 import './CreatePoll.css';
 
@@ -103,8 +104,20 @@ export default class CreatePoll extends Component<Props, State> {
                 Create
               </Button>
             </div>
+            <div>
+            </div>
           </div>
         </form>
+        <div>
+          Just testing it out? An example poll can be generated for you.
+          {' '}
+          <ExampleCreator identity={this.context}>
+            <Button
+              variant="link"
+              >Create example.
+            </Button>
+          </ExampleCreator>
+        </div>
       </div>
     );
   }

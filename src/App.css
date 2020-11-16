@@ -37,3 +37,9 @@ ol,ul {
   list-style: none;
   padding-left: 0;
 }
+
+/* react-bootstrap button-links should align with text */
+.btn-link {
+  padding: 0;
+  vertical-align: top;
+}
