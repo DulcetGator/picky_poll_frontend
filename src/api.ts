@@ -7,10 +7,12 @@ export type Ballot = {
 
 export type Poll = {
   id: string,
+  name: string,
   description: string,
-  candidates: string[],
+  candidates: Candidate[],
   close: string,
-  expires: string
+  expires: string,
+  configuration: Configuration
 };
 
 export type GetPollResponse = {
@@ -18,16 +20,35 @@ export type GetPollResponse = {
   ballots: Ballot[]
 }
 
-async function createPoll(key: string, description: string, options: string[]): Promise<Poll> {
+export type Candidate = {
+  name: string,
+  description: string | null
+}
+
+export type Configuration = {
+  writeIns: boolean
+}
+
+const voteSecretKey = 'X-VOTE-SECRET'
+
+async function createPoll(key: string,
+  name: string,
+  description:
+  string,
+  candidates: Candidate[],
+  configuration: Configuration
+  ): Promise<Poll> {
   const response = await fetch('/api/polls', {
     headers: {
       'content-type': 'application/json',
-      'X-VOTE-SECRET': key,
+      [voteSecretKey]: key,
     },
     method: 'POST',
     body: JSON.stringify({
+      name,
       description,
-      candidates: options,
+      candidates,
+      configuration,
     }),
   })
   return response.json()
@@ -38,7 +59,7 @@ async function postBallot(key: string, pollId: string, ballotId: string, name: s
   return await fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
     headers: {
       'content-type': 'application/json',
-      'X-VOTE-SECRET': key,
+      [voteSecretKey]: key,
     },
     method: 'PUT',
     body: JSON.stringify({

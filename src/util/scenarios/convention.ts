@@ -1,9 +1,9 @@
 export const poll = {
   description: 'Where should the convention be held?',
   candidates: [
-    'Seattle',
-    'Portland',
-    'San Francisco',
+    {name: 'Seattle', description: null},
+    {name: 'Portland', description: null},
+    {name: 'San Francisco', description: null},
   ]
 }
 

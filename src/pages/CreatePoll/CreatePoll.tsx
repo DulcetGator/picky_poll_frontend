@@ -13,11 +13,15 @@ type Props = {
 };
 
 type State = {
+  name: string,
   description: string,
   candidates: {
     key: number,
     name: string,
   }[],
+  configuration: {
+    writeIns: boolean
+  }
   offerExample: boolean,
 };
 
@@ -32,9 +36,13 @@ export default class CreatePoll extends Component<Props, State> {
     super(props);
 
     this.state = {
+      name: '',
       description: '',
       candidates: [{ key: 0, name: '' }, { key: 1, name: '' }],
-      offerExample: true,
+      configuration: {
+        writeIns: false,
+      },
+      offerExample: true
     };
   }
 
@@ -45,7 +53,7 @@ export default class CreatePoll extends Component<Props, State> {
     const hasDuplicates = new Set(candidateNames).size
       < candidateNames.length;
 
-    return this.state.description.length > 0
+    return this.state.name.length > 0
       && candidateNames.length >= 2
       && !hasDuplicates;
   }
@@ -74,20 +82,32 @@ export default class CreatePoll extends Component<Props, State> {
     return (
       <div className="CreatePollForm">
         <form onSubmit={(e) => this.handleSubmit(e)}>
-          <Form.Group as={Row} controlId="DescriptionInput">
-            <Form.Label column sm="auto">
-              Question
-            </Form.Label>
-            <Col>
-              <FormControl
-                as="textarea"
-                placeholder="What is your preference among the following choices?"
-                value={this.state.description}
-                onChange={(e) => this.handleDescriptionChange(e.currentTarget.value)}
-              />
-            </Col>
+          <Col>
+            <Form.Group as={Row} controlId="NameInput">
+              <Form.Label column sm="auto">
+                Poll Name
+              </Form.Label>
+                <FormControl
+                  value={this.state.name}
+                  onChange={(e) => this.handleNameChange(e.currentTarget.value)}
+                />
+            </Form.Group>
+            <Form.Group as={Row} controlId="DescriptionInput">
+              <Form.Label column sm="auto">
+                Description (Optional)
+              </Form.Label>
+                <FormControl
+                  as="textarea"
+                  rows={2}
+                  placeholder="What is your preference among the following choices?"
+                  value={this.state.description}
+                  onChange={(e) => this.handleDescriptionChange(e.currentTarget.value)}
+                />
+            </Form.Group>
+          </Col>
+          <Form.Group>
+            <ul>{answers}</ul>
           </Form.Group>
-          <ul>{answers}</ul>
           <div className="form-controls">
             <div>
               <Button
@@ -125,6 +145,12 @@ export default class CreatePoll extends Component<Props, State> {
     );
   }
 
+  private handleNameChange(newName: string): void {
+    this.setState({
+      name: newName
+    });
+  }
+
   private handleDescriptionChange(newDescription: string): void {
     this.setState({
       description: newDescription,
@@ -136,10 +162,15 @@ export default class CreatePoll extends Component<Props, State> {
 
     const poll = await createPoll(
       this.context.getKey(),
+      this.state.name,
       this.state.description,
       this.state.candidates
-        .map((c) => c.name)
-        .filter((n) => n.length > 0),
+        .map(c => ({
+          name: c.name,
+          description: null,
+        }))
+        .filter((c) => c.name.length > 0),
+      this.state.configuration
     );
 
     this.context.addKnownPoll(poll, true);

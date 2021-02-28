@@ -1,6 +1,7 @@
 import React, { Component, Context } from 'react';
 import { Button } from 'react-bootstrap';
-import { Ballot, Poll } from '../../api';
+import mapByField from '../../util/mapByField'
+import { Ballot, Candidate, Poll } from '../../api';
 import CreateBallot from './ballot/CreateBallot';
 import BallotPreview from './ballot/BallotPreview';
 import MyBallotPreview from './ballot/MyBallotPreview';
@@ -23,8 +24,15 @@ class PollDetailsView extends Component<Props, State> {
 
   context!: IdentityService
 
+  namesToCandidates: Map<string, Candidate>
+
   constructor(props: Props) {
     super(props);
+
+    this.namesToCandidates = mapByField(
+      props.poll.candidates,
+      c => c.name
+    );
 
     this.state = {
       expandRedundantBallot: false,
@@ -46,6 +54,7 @@ class PollDetailsView extends Component<Props, State> {
       <li className="my-ballot-item" key={b.id}>
         <MyBallotPreview
           poll={this.props.poll}
+          candidates={this.namesToCandidates}
           ballotKey={this.context.getKey()}
           ballot={b}
         />
@@ -64,6 +73,7 @@ class PollDetailsView extends Component<Props, State> {
           : (
             <CreateBallot
               poll={this.props.poll}
+              candidates={this.namesToCandidates}
               ballotKey={this.context.getKey()}
               onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
             />
@@ -116,6 +126,7 @@ class PollDetailsView extends Component<Props, State> {
     return (
       <CreateBallot
         poll={this.props.poll}
+        candidates={this.namesToCandidates}
         ballotKey={this.context.getKey()}
         onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
       />
@@ -129,7 +140,7 @@ class PollDetailsView extends Component<Props, State> {
   render() {
     return (
       <div>
-        <h1>{this.props.poll.description}</h1>
+        <h1>{this.props.poll.name}</h1>
         {
           this.props.ballots.length > 0
             ? (

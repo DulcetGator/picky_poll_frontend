@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { Poll, Ballot } from '../../../api';
+import { Ballot, Candidate, Poll } from '../../../api';
 import EditBallot from './EditBallot';
 
 import './MyBallotPreview.css';
@@ -32,6 +32,7 @@ function MyBallotReadOnly(props: MyBallotReadOnlyProps) {
 
 type Props = {
   poll: Poll,
+  candidates: Map<string, Candidate>,
   ballotKey: string,
   ballot: Ballot,
 }
@@ -66,6 +67,7 @@ export default class MyBallotPreview extends Component<Props, State> {
       return (
         <EditBallot
           poll={this.props.poll}
+          candidates={this.props.candidates}
           ballotKey={this.props.ballotKey}
           ballot={this.state.ballot}
           onSubmitBallot={(ballot) => this.handleSubmitBallot(ballot)}

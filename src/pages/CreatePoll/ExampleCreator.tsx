@@ -37,8 +37,12 @@ export default function ExampleCreator(props: Props) {
 
     const poll = await createPoll(
       props.identity.getKey(),
+      "Example poll",
       scenario.poll.description,
       scenario.poll.candidates,
+      {
+        writeIns: false,
+      },
     )
     
     const ballotSubmissions = scenario.ballots.map(b =>

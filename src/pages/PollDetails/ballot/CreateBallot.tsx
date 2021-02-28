@@ -3,7 +3,7 @@ import {
   Button, Card, FormControl, InputGroup,
 } from 'react-bootstrap';
 import Ranker from './Ranker';
-import { Poll, Ballot, postBallot } from '../../../api';
+import { Ballot, Candidate, Poll, postBallot } from '../../../api';
 import crypto from 'crypto';
 import shuffle from '../../../util/shuffle';
 
@@ -14,6 +14,7 @@ import promiseTimeout from '../../../util/promiseTimeout';
 
 type Props = {
   poll: Poll,
+  candidates: Map<string, Candidate>,
   ballotKey: string,
   onSubmitBallot: (ballot: Ballot) => void
 };
@@ -33,6 +34,12 @@ class CreateBallot extends Component<Props, State> {
   }
 
   render() {
+    const rankedCandidates = this
+    .state
+    .ballot
+    .rankings
+    .map(n => this.props.candidates.get(n) as Candidate);
+
     return (
       <Card className="CreateBallot">
         <Card.Header>
@@ -44,7 +51,7 @@ class CreateBallot extends Component<Props, State> {
           </InputGroup>
         </Card.Header>
         <Ranker
-          candidates={this.state.ballot.rankings}
+          candidates={rankedCandidates}
           onUpdateCandidates={(e) => this.onUpdateCandidates(e)}
         />
         <p>
@@ -63,9 +70,10 @@ class CreateBallot extends Component<Props, State> {
     );
   }
 
-  onUpdateCandidates(candidates: string[]) {
+  onUpdateCandidates(candidates: Candidate[]) {
+    const rankedNames = candidates.map(c => c.name);
     this.setState({
-      ballot: { ...this.state.ballot, rankings: candidates },
+      ballot: { ...this.state.ballot, rankings: rankedNames },
     });
   }
 
@@ -94,7 +102,7 @@ class CreateBallot extends Component<Props, State> {
     const ballot: Ballot = {
       name: '',
       id: crypto.randomBytes(32).toString('hex'),
-      rankings: shuffle(this.props.poll.candidates.slice(0)),
+      rankings: shuffle(Array.from(this.props.candidates.keys())),
       timestamp: Date.now(),
     };
     return ballot;
