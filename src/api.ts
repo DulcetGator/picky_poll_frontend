@@ -51,7 +51,8 @@ async function createPoll(key: string,
       configuration,
     }),
   })
-  return response.json()
+  const responseBody = await response.json();
+  return responseBody['poll'];
 }
 
 async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[])

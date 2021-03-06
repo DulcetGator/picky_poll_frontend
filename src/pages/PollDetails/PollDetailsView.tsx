@@ -142,6 +142,11 @@ class PollDetailsView extends Component<Props, State> {
       <div>
         <h1>{this.props.poll.name}</h1>
         {
+          this.props.poll.description
+          ? <p>{this.props.poll.description}</p>
+          : null
+        }
+        {
           this.props.ballots.length > 0
             ? (
               <CopelandExplainer
