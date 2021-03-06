@@ -120,7 +120,7 @@ export default class PollSummary extends Component<Props, State> {
           <div className="title">
             {this.wrapInLink(
               <div className="padder poll-description">
-                {this.props.knownPoll.poll.description}
+                {this.props.knownPoll.poll.name}
               </div>,
             )}
             <div className="padder remove-poll-button">
