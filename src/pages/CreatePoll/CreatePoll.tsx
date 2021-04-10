@@ -52,9 +52,11 @@ export default class CreatePoll extends Component<Props, State> {
       .filter((c) => c.length > 0);
     const hasDuplicates = new Set(candidateNames).size
       < candidateNames.length;
+    
+    const isCompetitive = candidateNames.length >=2 || this.state.configuration.writeIns
 
     return this.state.name.length > 0
-      && candidateNames.length >= 2
+      && isCompetitive
       && !hasDuplicates;
   }
 
@@ -105,6 +107,13 @@ export default class CreatePoll extends Component<Props, State> {
                 />
             </Form.Group>
           </Col>
+          <Form.Group controlId="allowWriteInsCheckbox">
+            <Form.Check
+              type="checkbox"
+              label="Allow write-in candidates" 
+              onChange={(e) => this.handleWriteInChange(e.currentTarget.checked)}
+              />
+          </Form.Group>
           <Form.Group>
             <ul>{answers}</ul>
           </Form.Group>
@@ -154,6 +163,13 @@ export default class CreatePoll extends Component<Props, State> {
   private handleDescriptionChange(newDescription: string): void {
     this.setState({
       description: newDescription,
+    });
+  }
+
+  private handleWriteInChange(newValue: boolean): void {
+    const newConfiguration = Object.assign({}, this.state.configuration, {writeIns: newValue});
+    this.setState({
+      configuration: newConfiguration
     });
   }
 
