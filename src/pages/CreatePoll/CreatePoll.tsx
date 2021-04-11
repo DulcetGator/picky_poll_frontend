@@ -132,15 +132,6 @@ export default class CreatePoll extends Component<Props, State> {
           <div className="form-controls">
             <div>
               <Button
-                variant="secondary"
-                type="button"
-                onClick={() => this.handleCreateCandidate()}
-              >
-                New Choice
-              </Button>
-            </div>
-            <div>
-              <Button
                 variant="primary"
                 type="submit"
                 disabled={!this.isValid()}
@@ -215,32 +206,29 @@ export default class CreatePoll extends Component<Props, State> {
     });
   }
 
-  private handleCreateCandidate(): void {
-    this.setState({
-      candidates: this.state.candidates.concat([
-        {
-          key: ++this.lastCandidate,
-          candidate: {
-            name: '',
-            description: null,
-          },
-        },
-      ]),
-    });
-  }
-
   private changeCandidate(index: number, newProps: Record<string, unknown>): void {
-    const newCandidate = Object.assign({}, this.state.candidates[index].candidate, newProps)
-    const newEntry = {
+    const oldCandidate = this.state.candidates[index].candidate
+    const changedCandidate = Object.assign({}, oldCandidate, newProps)
+    const changedEntry = {
       key: this.state.candidates[index].key,
-      candidate: newCandidate,
+      candidate: changedCandidate,
     }
-    const newCandidates = this.state.candidates
+    let changedCandidates = this.state.candidates
       .slice(0, index)
-      .concat(newEntry)
+      .concat(changedEntry)
       .concat(this.state.candidates.slice(index + 1));
+    
+    if (index === this.state.candidates.length - 1
+      && !oldCandidate.name
+      && !oldCandidate.description) {
+        changedCandidates = changedCandidates.concat([{
+          key: this.lastCandidate++,
+          candidate: newCandidate(),
+        }])
+      }
+
     this.setState({
-      candidates: newCandidates,
+      candidates: changedCandidates,
       offerExample: false,
     });
   }
