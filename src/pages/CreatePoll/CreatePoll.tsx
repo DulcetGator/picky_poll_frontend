@@ -7,6 +7,7 @@ import ExampleCreator from './ExampleCreator'
 import IdentityContext, { IdentityService } from '../../userIdentity';
 import './CreatePoll.css';
 import FadeToggle from '../../partials/FadeToggle';
+import { Candidate } from '../../api'
 
 type Props = {
   onCreatePoll: ({ id } : {id: string}) => void
@@ -17,7 +18,7 @@ type State = {
   description: string,
   candidates: {
     key: number,
-    name: string,
+    candidate: Candidate,
   }[],
   configuration: {
     writeIns: boolean
@@ -25,8 +26,12 @@ type State = {
   offerExample: boolean,
 };
 
+function newCandidate() {
+  return { name: '', description: null};
+}
+
 export default class CreatePoll extends Component<Props, State> {
-  lastCandidate = 1;
+  lastCandidate = 0;
 
   static contextType: Context<IdentityService> = IdentityContext;
 
@@ -38,7 +43,10 @@ export default class CreatePoll extends Component<Props, State> {
     this.state = {
       name: '',
       description: '',
-      candidates: [{ key: 0, name: '' }, { key: 1, name: '' }],
+      candidates: [
+        { key: this.lastCandidate++, candidate: newCandidate() },
+        { key: this.lastCandidate++, candidate: newCandidate() }
+      ],
       configuration: {
         writeIns: false,
       },
@@ -48,7 +56,7 @@ export default class CreatePoll extends Component<Props, State> {
 
   isValid(): boolean {
     const candidateNames = this.state.candidates
-      .map((c) => c.name)
+      .map((c) => c.candidate.name)
       .filter((c) => c.length > 0);
     const hasDuplicates = new Set(candidateNames).size
       < candidateNames.length;
@@ -74,8 +82,12 @@ export default class CreatePoll extends Component<Props, State> {
             </Button>
           </InputGroup.Prepend>
           <FormControl
-            onChange={(e) => this.handleCandidateChange(index, e.currentTarget.value)}
+            onChange={(e) => this.handleCandidateNameChange(index, e.currentTarget.value)}
             placeholder={`Choice #${index + 1}`}
+          />
+          <FormControl
+            onChange={(e) => this.handleCandidateDescriptionChange(index, e.currentTarget.value)}
+            placeholder={`(Optional) description`}
           />
         </InputGroup>
       </li>
@@ -181,10 +193,7 @@ export default class CreatePoll extends Component<Props, State> {
       this.state.name,
       this.state.description,
       this.state.candidates
-        .map(c => ({
-          name: c.name,
-          description: null,
-        }))
+        .map(c => c.candidate)
         .filter((c) => c.name.length > 0),
       this.state.configuration
     );
@@ -194,18 +203,15 @@ export default class CreatePoll extends Component<Props, State> {
     this.props.onCreatePoll(poll);
   }
 
-  handleCandidateChange(index: number, newName: string): void {
-    const changedCandidate = {
-      key: this.state.candidates[index].key,
+  private handleCandidateNameChange(index: number, newName: string): void {
+    this.changeCandidate(index, {
       name: newName,
-    };
-    const newCandidates = this.state.candidates
-      .slice(0, index)
-      .concat(changedCandidate)
-      .concat(this.state.candidates.slice(index + 1));
-    this.setState({
-      candidates: newCandidates,
-      offerExample: false,
+    });
+  }
+
+  private handleCandidateDescriptionChange(index: number, newDescription: string): void {
+    this.changeCandidate(index, {
+      description: newDescription || null,
     });
   }
 
@@ -214,9 +220,28 @@ export default class CreatePoll extends Component<Props, State> {
       candidates: this.state.candidates.concat([
         {
           key: ++this.lastCandidate,
-          name: '',
+          candidate: {
+            name: '',
+            description: null,
+          },
         },
       ]),
+    });
+  }
+
+  private changeCandidate(index: number, newProps: Record<string, unknown>): void {
+    const newCandidate = Object.assign({}, this.state.candidates[index].candidate, newProps)
+    const newEntry = {
+      key: this.state.candidates[index].key,
+      candidate: newCandidate,
+    }
+    const newCandidates = this.state.candidates
+      .slice(0, index)
+      .concat(newEntry)
+      .concat(this.state.candidates.slice(index + 1));
+    this.setState({
+      candidates: newCandidates,
+      offerExample: false,
     });
   }
 

@@ -5,6 +5,8 @@ import { Ballot, Candidate, Poll } from '../../api';
 import CreateBallot from './ballot/CreateBallot';
 import BallotPreview from './ballot/BallotPreview';
 import MyBallotPreview from './ballot/MyBallotPreview';
+import ListCandidates from './candidates/ListCandidates'
+import WriteInSubmitter from './WriteInSubmitter';
 import { CopelandExplainer } from './explainers';
 import { IdentityContext, IdentityService } from '../../userIdentity';
 import './PollDetailsView.css';
@@ -155,6 +157,16 @@ class PollDetailsView extends Component<Props, State> {
               />
             )
             : null
+        }
+        <ListCandidates candidates={this.props.poll.candidates} />
+        {
+          this.props.poll.configuration.writeIns
+          ? <WriteInSubmitter
+            poll = {this.props.poll}
+            candidates = {this.namesToCandidates}
+            onNewCandidate = {(c: Candidate) => {}}
+            />
+          : null
         }
         {this.ownedBallotSection()}
         {this.unownedBallotsSection()}
