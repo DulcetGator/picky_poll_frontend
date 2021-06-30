@@ -27,9 +27,6 @@ export default function ListCandidates(props: Props) {
     )
     return (
         <div className="ListCandidates">
-            <h2>
-                Candidates
-            </h2>
             <Table>
                 <tbody>
                     {candidateRows}

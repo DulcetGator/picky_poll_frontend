@@ -6,6 +6,7 @@ import CreateBallot from './ballot/CreateBallot';
 import BallotPreview from './ballot/BallotPreview';
 import MyBallotPreview from './ballot/MyBallotPreview';
 import ListCandidates from './candidates/ListCandidates'
+import Collapsable from '../../partials/Collapsable';
 import WriteInSubmitter from './WriteInSubmitter';
 import { CopelandExplainer } from './explainers';
 import { IdentityContext, IdentityService } from '../../userIdentity';
@@ -112,7 +113,7 @@ class PollDetailsView extends Component<Props, State> {
     if (!this.state.expandRedundantBallot) {
       return (
         <div>
-          <p className="desribe-redundant-ballot">
+          <p className="describe-redundant-ballot">
             You already submitted a ballot, but Picky Poll does not prevent you from submitting
             another. Others can see each ballot that is submitted.
           </p>
@@ -158,13 +159,15 @@ class PollDetailsView extends Component<Props, State> {
             )
             : null
         }
-        <ListCandidates candidates={this.props.poll.candidates} />
+        <Collapsable title="Candidate Details" defaultCollapsed={true}>
+          <ListCandidates candidates={this.props.poll.candidates} />
+        </Collapsable>
         {
           this.props.poll.configuration.writeIns
           ? <WriteInSubmitter
             poll = {this.props.poll}
             candidates = {this.namesToCandidates}
-            onNewCandidate = {(c: Candidate) => {}}
+            onNewCandidate = {(c: Candidate) => {return c;}}
             />
           : null
         }
