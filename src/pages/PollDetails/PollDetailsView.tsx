@@ -6,7 +6,7 @@ import CreateBallot from './ballot/CreateBallot';
 import BallotPreview from './ballot/BallotPreview';
 import MyBallotPreview from './ballot/MyBallotPreview';
 import ListCandidates from './candidates/ListCandidates'
-import Collapsable from '../../partials/Collapsable';
+import Collapsible from '../../partials/Collapsible';
 import WriteInSubmitter from './WriteInSubmitter';
 import { CopelandExplainer } from './explainers';
 import { IdentityContext, IdentityService } from '../../userIdentity';
@@ -159,9 +159,14 @@ class PollDetailsView extends Component<Props, State> {
             )
             : null
         }
-        <Collapsable title="Candidate Details" defaultCollapsed={true}>
-          <ListCandidates candidates={this.props.poll.candidates} />
-        </Collapsable>
+        {
+          this.shouldShowCandidateDetails()
+          ? <Collapsible title="Candidate Descriptions" defaultCollapsed={true}>
+              <ListCandidates candidates={this.props.poll.candidates} />
+            </Collapsible>
+          : null
+        }
+
         {
           this.props.poll.configuration.writeIns
           ? <WriteInSubmitter
@@ -185,6 +190,10 @@ class PollDetailsView extends Component<Props, State> {
     );
     this.props.onSubmitNewBallot(ballot);
     this.setState({ ...this.state, expandRedundantBallot: false });
+  }
+
+  shouldShowCandidateDetails() {
+    return this.props.poll.candidates.findIndex(c => c.description) >= 0;
   }
 }
 

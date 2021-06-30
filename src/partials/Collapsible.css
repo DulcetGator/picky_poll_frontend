@@ -1,9 +1,9 @@
-.Collapsable .head {
+.Collapsible .head {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.Collapsable .head .title {
+.Collapsible .head .title {
     margin: .2em;
 }

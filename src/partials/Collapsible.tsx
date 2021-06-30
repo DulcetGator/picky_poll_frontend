@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import "./Collapsable.css"
+import "./Collapsible.css"
 
 type Props = {
     title: string,
@@ -12,7 +12,7 @@ type State = {
     collapsed: boolean
 }
 
-class Collapsable extends Component<Props, State> {
+class Collapsible extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
@@ -23,11 +23,11 @@ class Collapsable extends Component<Props, State> {
     }
 
     render() {
-        return <div className="Collapsable">
+        return <div className="Collapsible">
             <div className="head">
                 <h2 className="title">{this.props.title}</h2>
-                <div className="collapsable-control">
-                    <Button variant="secondary" onClick={() => this.toggleCollapsed()}>{this.getButtonContent()}</Button>
+                <div className="collapiable-control">
+                    <Button variant="outline-primary" onClick={() => this.toggleCollapsed()}>{this.getButtonContent()}</Button>
                 </div>
             </div>
             <div hidden={this.state.collapsed}>
@@ -45,4 +45,4 @@ class Collapsable extends Component<Props, State> {
     }
 }
 
-export default Collapsable;
+export default Collapsible;
