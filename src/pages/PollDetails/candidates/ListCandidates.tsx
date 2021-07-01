@@ -6,7 +6,7 @@ import './ListCandidates.css'
 
 function candidateRow(c: Candidate) {
     return (
-        <tr>
+        <tr key={c.name}>
             <td>
                 {c.name}
             </td>

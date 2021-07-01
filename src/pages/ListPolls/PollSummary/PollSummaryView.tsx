@@ -21,7 +21,7 @@ export function PollSummaryView(props: Props) {
   }
 
   let winnerDescription = null;
-  if (props.poll.ballots.length > 0) {
+  if (props.poll.ballots.flatMap(b => b.rankings).length > 0) {
     const result = copeland(props.poll.ballots.map((b) => b.rankings));
     const winnerDescriptionText = describeWinners(isClosed, result[0].candidates.map(c => c.candidate));
     winnerDescription = (
@@ -32,9 +32,9 @@ export function PollSummaryView(props: Props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <p className="poll-vote-status">{ballotCountStatus}</p>
       {winnerDescription}
-    </React.Fragment>
+    </>
   );
 }

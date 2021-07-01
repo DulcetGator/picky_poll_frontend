@@ -55,6 +55,16 @@ async function createPoll(key: string,
   return responseBody['poll'];
 }
 
+async function postCandidate(pollId: string, candidate: Candidate) {
+  return await fetch(`/api/polls/${pollId}/candidates`, {
+    headers: {
+      'content-type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(candidate)
+  });
+}
+
 async function postBallot(key: string, pollId: string, ballotId: string, name: string, rankings: string[])
 : Promise<Response> {
   return await fetch(`/api/polls/${pollId}/ballots/${ballotId}`, {
@@ -82,4 +92,4 @@ async function getPoll(pollId: string): Promise<GetPollResponse | null> {
   return null;
 }
 
-export { createPoll, postBallot, getPoll };
+export { createPoll, getPoll, postCandidate, postBallot, };

@@ -16,7 +16,7 @@ type Props = {
   poll: Poll,
   candidates: Map<string, Candidate>,
   ballotKey: string,
-  onSubmitBallot: (ballot: Ballot) => void
+  onSubmitBallot: (ballot: Ballot) => void,
 };
 
 type State = {
