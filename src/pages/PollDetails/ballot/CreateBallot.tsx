@@ -10,11 +10,12 @@ import shuffle from '../../../util/shuffle';
 import './CreateBallot.css';
 import BasicSpinner from '../../../partials/BasicSpinner';
 import promiseTimeout from '../../../util/promiseTimeout';
+import mapByField from '../../../util/mapByField';
+import { shallowSetEquals } from '../../../util/set';
 
 
 type Props = {
   poll: Poll,
-  candidates: Map<string, Candidate>,
   ballotKey: string,
   onSubmitBallot: (ballot: Ballot) => void,
 };
@@ -34,11 +35,12 @@ class CreateBallot extends Component<Props, State> {
   }
 
   render() {
+    const nameToCandidate = mapByField(this.props.poll.candidates, c => c.name);
     const rankedCandidates = this
-    .state
-    .ballot
-    .rankings
-    .map(n => this.props.candidates.get(n) as Candidate);
+      .state
+      .ballot
+      .rankings
+      .map(n => nameToCandidate.get(n) as Candidate);
 
     return (
       <Card className="CreateBallot">
@@ -68,6 +70,17 @@ class CreateBallot extends Component<Props, State> {
         }
       </Card>
     );
+  }
+
+  componentDidUpdate() {
+    const oldCandidates = new Set(this.state.ballot.rankings);
+    if (!shallowSetEquals(oldCandidates, new Set(this.props.poll.candidates.map(c => c.name)))) {
+      const newCandidates = this.props.poll.candidates.map(c => c.name).filter(cn => !oldCandidates.has(cn));
+      const newRankings = [...this.state.ballot.rankings, ...newCandidates];
+      this.setState({
+        ballot: { ...this.state.ballot, rankings: newRankings}
+      })
+    }
   }
 
   onUpdateCandidates(candidates: Candidate[]) {
@@ -102,7 +115,7 @@ class CreateBallot extends Component<Props, State> {
     const ballot: Ballot = {
       name: '',
       id: crypto.randomBytes(32).toString('hex'),
-      rankings: shuffle(Array.from(this.props.candidates.keys())),
+      rankings: shuffle(Array.from(this.props.poll.candidates.map(c => c.name))),
       timestamp: Date.now(),
     };
     return ballot;

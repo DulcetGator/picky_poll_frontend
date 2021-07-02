@@ -6,10 +6,11 @@ import { Candidate, Poll, Ballot, postBallot } from '../../../api';
 import shuffle from '../../../util/shuffle';
 import promiseTimeout from '../../../util/promiseTimeout'
 import BasicSpinner from '../../../partials/BasicSpinner';
+import { shallowSetEquals } from '../../../util/set';
+import mapByField from '../../../util/mapByField';
 
 type Props = {
   poll: Poll,
-  candidates: Map<string, Candidate>,
   ballotKey: string,
   ballot: Ballot,
 
@@ -21,16 +22,17 @@ type State = {
   isBusy: boolean,
 };
 
-class CreateBallot extends Component<Props, State> {
+class EditBallot extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const newChoices = Array.from(props.candidates.keys())
+    const newChoices = Array.from(props.poll.candidates.map(c => c.name))
       .filter((c) => props.ballot.rankings.indexOf(c) < 0);
     shuffle(newChoices);
 
+    const nameToCandidate = mapByField(props.poll.candidates, c => c.name)
     const rankings = props.ballot.rankings.concat(newChoices)
       .flatMap(name =>
-        [props.candidates.get(name)].filter(value => !!value) as Candidate[]
+        [nameToCandidate.get(name)].filter(value => !!value) as Candidate[]
       );
 
     this.state = {
@@ -64,6 +66,17 @@ class CreateBallot extends Component<Props, State> {
     );
   }
 
+  componentDidUpdate() {
+    const oldCandidates = new Set(this.state.rankedCandidates.map(c => c.name));
+    if (!shallowSetEquals(oldCandidates, new Set(this.props.poll.candidates.map(c => c.name)))) {
+      const newCandidates = this.props.poll.candidates.filter(c => !oldCandidates.has(c.name));
+      const newRankings = [...this.state.rankedCandidates, ...newCandidates];
+      this.setState({
+        rankedCandidates: newRankings
+      })
+    }
+  }
+
   handleUpdateCandidates(candidates: Candidate[]) {
     this.setState({ rankedCandidates: candidates });
   }
@@ -90,4 +103,4 @@ class CreateBallot extends Component<Props, State> {
   }
 }
 
-export default CreateBallot;
+export default EditBallot;

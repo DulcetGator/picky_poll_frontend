@@ -14,7 +14,6 @@ import './WriteInSubmitter.css'
 
 type Props = {
   poll: Poll,
-  candidates: Map<string, Candidate>,
   onNewCandidate: (candidate: Candidate) => void
 };
 
@@ -41,16 +40,17 @@ export default class WriteInSubmitter extends Component<Props, State> {
 
     async submit() {
         this.setState(Object.assign({}, this.state, {isSubmitting: true}));
-
         const description = this.state.description && this.state.description.trim() ? this.state.description.trim() : null;
-        const minWaitPromise = promiseTimeout(200);
-        const result = await postCandidate(this.props.poll.id, {
+        const candidate: Candidate = {
             name: this.state.name,
-            description: description,
-        });
+            description,
+        }
+        const minWaitPromise = promiseTimeout(200);
+        const result = await postCandidate(this.props.poll.id, candidate);
         await minWaitPromise;
         if (result.ok) {
             this.setState(Object.assign({}, newState));
+            this.props.onNewCandidate(candidate);
         } else if (result.status == 409 /*conflict*/) {
             this.setState(Object.assign({}, this.state, {isSubmitting: false, error: `A candidate named '${this.state.name}' already exists.`}));
         } else {

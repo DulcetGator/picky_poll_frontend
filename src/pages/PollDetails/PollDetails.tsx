@@ -1,5 +1,5 @@
 import React, { Component, Context } from 'react';
-import { getPoll, Ballot, Poll } from '../../api';
+import { getPoll, Ballot, Candidate, Poll } from '../../api';
 import PollDetailsView from './PollDetailsView';
 import IdentityContext, { IdentityService } from '../../userIdentity';
 import BasicSpinner from '../../partials/BasicSpinner';
@@ -40,11 +40,18 @@ class PollDetails extends Component<Props, State> {
       this.setState({ ...okState, ballots });
     }
 
+    const handleSubmitNewCandidate = (c: Candidate) => {
+      const candidates = [...okState.poll.candidates, c];
+      okState.poll.candidates = candidates;
+      this.setState({...okState, poll: okState.poll})
+    }
+
     return (
       <PollDetailsView
         poll={okState.poll}
         ballots={okState.ballots}
         onSubmitNewBallot={handleSubmitNewBallot}
+        onSubmitNewCandidate={handleSubmitNewCandidate}
       />
     );
   }
