@@ -85,6 +85,7 @@ export default class WriteInSubmitter extends Component<Props, State> {
                         {this.buttonContent()}
                     </Button>
                 </Form>
+                <p></p>
             </div>
         );
     }

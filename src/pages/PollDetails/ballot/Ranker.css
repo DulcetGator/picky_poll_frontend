@@ -24,3 +24,39 @@
   border-bottom-style: solid;
   padding: 0.5em 0;
 } */
+
+.ranker-hint {
+  border: none;
+  padding: 0;
+}
+
+.ranker-hint-visible {
+  animation-duration: 300ms;
+  animation-name: hint-appear;
+  overflow: hidden;
+}
+
+.ranker-hint-hidden {
+  max-height: 0;
+  animation-duration: 300ms;
+  animation-name: hint-disappear;
+  overflow: hidden;
+}
+
+@keyframes hint-appear {
+  from {
+    max-height: 0;
+  }
+  to {
+    max-height: 6em;
+  }
+}
+
+@keyframes hint-disappear {
+  from {
+    max-height: 6em;
+  }
+  to {
+    max-height: 0;
+  }
+}

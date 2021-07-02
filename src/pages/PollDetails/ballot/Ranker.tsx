@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { MouseEventHandler, Component } from 'react';
 import {
   DragDropContext, Draggable, Droppable, DropResult,
 } from 'react-beautiful-dnd';
-import { Card } from 'react-bootstrap';
+import { Alert, Card } from 'react-bootstrap';
 import { Candidate } from '../../../api';
 import { shallowArrayEq } from '../../../util/array';
 import './Ranker.css';
@@ -10,6 +10,7 @@ import './Ranker.css';
 type CandidateDragProps = {
   candidate: Candidate,
   index: number,
+  onClick: MouseEventHandler
 };
 
 type CandidateDragState = {
@@ -37,6 +38,7 @@ class CandidateDrag extends Component<CandidateDragProps, CandidateDragState> {
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
+              onClick={(e: React.MouseEvent) => this.props.onClick(e)}
             >
               <Card>
                 {this.props.candidate.name}
@@ -49,19 +51,29 @@ class CandidateDrag extends Component<CandidateDragProps, CandidateDragState> {
   }
 }
 
+enum HintStatus {
+  None,
+  Show,
+  Hide,
+}
+
 type Props = {
   candidates: Candidate[],
   onUpdateCandidates: (cs: Candidate[]) => void
 };
 
 type State = {
-  orderedCandidates: Candidate[]
+  orderedCandidates: Candidate[],
+  hintStatus: HintStatus
 }
 
 class Ranker extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {orderedCandidates: [...this.props.candidates]}
+    this.state = {
+      orderedCandidates: [...this.props.candidates],
+      hintStatus: HintStatus.None
+    }
   }
 
   componentDidUpdate() {
@@ -79,6 +91,9 @@ class Ranker extends Component<Props, State> {
         <DragDropContext
           onDragEnd={(dropResult) => this.handleCandidateDrop(dropResult)}
         >
+          {
+            this.hint()
+          }
           <Droppable droppableId="candidate-list-droppable">
             { (provided) => (
               <div
@@ -90,6 +105,7 @@ class Ranker extends Component<Props, State> {
                     key={candidate.name}
                     candidate={candidate}
                     index={i}
+                    onClick={e => this.handleClick(e)}
                   />
                 ))}
                 {provided.placeholder}
@@ -102,6 +118,9 @@ class Ranker extends Component<Props, State> {
   }
 
   handleCandidateDrop(result: DropResult) {
+    if (this.state.hintStatus == HintStatus.Show) {
+      this.setState({hintStatus: HintStatus.Hide});
+    }
     if (!result.destination) {
       return;
     }
@@ -112,6 +131,29 @@ class Ranker extends Component<Props, State> {
       this.state.orderedCandidates.splice(result.source.index, 1)[0],
     );
     this.props.onUpdateCandidates(this.state.orderedCandidates);
+  }
+
+  hint() {
+    if (this.state.hintStatus == HintStatus.None) {
+      return null;
+    }
+    const hintClass = this.state.hintStatus == HintStatus.Show ? "ranker-hint-visible" : "ranker-hint-hidden"
+    const hintText = this.state.orderedCandidates.length == 1
+      ? "There is only one candidate right now, so you can't rank anything yet."
+      : "Drag the candidates to rank them from best to worst."
+    return <div className={`ranker-hint ${hintClass}`}>
+        <Alert variant="info">
+            {hintText}
+        </Alert>
+      </div>;
+  }
+
+  handleClick(e: React.MouseEvent) {
+    if (!e.defaultPrevented) {
+      this.setState({
+        hintStatus: HintStatus.Show
+      })
+    }
   }
 }
 
