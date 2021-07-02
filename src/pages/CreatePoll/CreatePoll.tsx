@@ -87,6 +87,8 @@ export default class CreatePoll extends Component<Props, State> {
           />
           <FormControl
             onChange={(e) => this.handleCandidateDescriptionChange(index, e.currentTarget.value)}
+            as="textarea"
+            rows={1}
             placeholder={`(Optional) description`}
           />
         </InputGroup>

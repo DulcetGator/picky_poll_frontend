@@ -58,29 +58,31 @@ class PollDetailsView extends Component<Props, State> {
         />
       </li>
     ));
+    const ownedBallot = ballots.length > 0
+      ? <ul className="my-ballots-list">
+          {ballots}
+        </ul>
+      : <CreateBallot
+          poll={this.props.poll}
+          ballotKey={this.context.getKey()}
+          onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
+        />
+    const writeInTip = <p>
+      Voting can begin after there is at least 1 candidate.
+    </p>
     return (
       <div>
         <h2>Your ballot</h2>
-        {
-        ballots.length > 0
-          ? (
-            <ul className="my-ballots-list">
-              {ballots}
-            </ul>
-          )
-          : (
-            <CreateBallot
-              poll={this.props.poll}
-              ballotKey={this.context.getKey()}
-              onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
-            />
-          )
-      }
+        {this.props.poll.candidates.length > 0 ? ownedBallot : writeInTip}
       </div>
     );
   }
 
   unownedBallotsSection() {
+    if (this.props.poll.candidates.length == 0) {
+      return null;
+    }
+
     const ballots = this.unownedBallots().map((b: Ballot) => (
       <li className="their-ballot-item" key={b.id}>
         <BallotPreview ballot={b} />
@@ -105,8 +107,8 @@ class PollDetailsView extends Component<Props, State> {
     }
 
     if (!this.state.expandRedundantBallot) {
-      return (
-        <div>
+      return <>
+          <h2>New ballot</h2>
           <p className="describe-redundant-ballot">
             You already submitted a ballot, but Picky Poll does not prevent you from submitting
             another. Others can see each ballot that is submitted.
@@ -116,8 +118,7 @@ class PollDetailsView extends Component<Props, State> {
               New ballot
             </Button>
           </p>
-        </div>
-      );
+        </>;
     }
 
     return (
@@ -127,6 +128,19 @@ class PollDetailsView extends Component<Props, State> {
         onSubmitBallot={(b) => this.handleSubmitNewBallot(b)}
       />
     );
+  }
+
+  writeInSubmitter() {
+    if (!this.props.poll.configuration.writeIns) {
+      return null;
+    }
+    return <>
+      <h2>New candidate</h2>
+      <WriteInSubmitter
+        poll = {this.props.poll}
+        onNewCandidate = {(c: Candidate) => this.handleSubmitNewCandidate(c)}
+      />
+    </>
   }
 
   handleEnableRedundantBallot() {
@@ -161,16 +175,9 @@ class PollDetailsView extends Component<Props, State> {
           : null
         }
 
-        {
-          this.props.poll.configuration.writeIns
-          ? <WriteInSubmitter
-            poll = {this.props.poll}
-            onNewCandidate = {(c: Candidate) => this.handleSubmitNewCandidate(c)}
-            />
-          : null
-        }
         {this.ownedBallotSection()}
         {this.unownedBallotsSection()}
+        {this.writeInSubmitter()}
         {this.redundantBallotSection()}
       </div>
     );

@@ -62,6 +62,7 @@ export default class WriteInSubmitter extends Component<Props, State> {
     render() {
         return (
             <div className="WriteInSubmitter">
+                <p>Anyone can add a new candidate to this poll.</p>
                 <Form>
                     {this.errorElement()}
                     <Form.Group as={Row} controlId="candidateNameInput">
@@ -73,19 +74,23 @@ export default class WriteInSubmitter extends Component<Props, State> {
                     </Form.Group>
                     <Form.Group as={Row}>
                         <Form.Control
-                            placeholder="(Optional) Candidate description"
+                            placeholder="Candidate description (optional)"
                             as="textarea"
                             rows={2}
                             value={this.state.description}
                             onChange={(e) => this.handleDescriptionChange(e.currentTarget.value)}
                         />
                     </Form.Group>
-                    <Button disabled={this.state.isSubmitting} onClick={() => this.submit()}>
+                    <Button disabled={!this.shouldEnableSubmit()} onClick={() => this.submit()}>
                         {this.buttonContent()}
                     </Button>
                 </Form>
             </div>
         );
+    }
+
+    shouldEnableSubmit() {
+        return (!this.state.isSubmitting) && this.state.name.trim().length > 0;
     }
 
     handleNameChange(newName: string) {
