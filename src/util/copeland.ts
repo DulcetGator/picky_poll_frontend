@@ -13,11 +13,14 @@ export type CopelandRanking = {
   }[]
 }
 
-export function copeland(ballots: string[][]): CopelandRanking[] {
+export function copeland(candidates: string[], ballots: string[][]): CopelandRanking[] {
 
-  const candidates = Array.from(
-    new Set(ballots.flat(1))
-  )
+  const candidatesSet = new Set(candidates);
+  ballots.flat(1)
+    .filter(c => !candidatesSet.has(c))
+    .forEach(c => {
+      throw `Unexpected candidate ${c}`
+    })
 
   const singleVotePrefs: {
     [id: string]: {
@@ -34,7 +37,7 @@ export function copeland(ballots: string[][]): CopelandRanking[] {
 
   ballots.forEach(ballot => {
 
-    const unseen: Set<string> = new Set(ballot);
+    const unseen: Set<string> = new Set(candidates);
 
     ballot.forEach((prefered) => {
       unseen.delete(prefered);

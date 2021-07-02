@@ -147,6 +147,7 @@ class PollDetailsView extends Component<Props, State> {
             ? (
               <CopelandExplainer
                 isClosed={!!this.props.poll.close}
+                candidates={this.props.poll.candidates.map(c => c.name)}
                 ballots={this.props.ballots}
               />
             )

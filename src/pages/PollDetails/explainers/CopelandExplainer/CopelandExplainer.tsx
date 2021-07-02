@@ -7,13 +7,14 @@ import './CopelandExplainer.css'
 import PairwiseTable from './PairwiseTable'
 
 type Props = {
+  candidates: string[],
   ballots: Ballot[],
   isClosed: boolean,
 }
 
 export default function CopelandExplainer(props: Props) {
 
-  const result = copeland(props.ballots.map(b => b.rankings))
+  const result = copeland(props.candidates, props.ballots.map(b => b.rankings))
   const winners = result[0]
     ? result[0].candidates.map(c => c.candidate)
     : []
