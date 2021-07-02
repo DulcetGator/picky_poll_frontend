@@ -16,6 +16,7 @@ type Props = {
   ballots: Ballot[],
   onSubmitNewBallot: (b: Ballot) => void,
   onSubmitNewCandidate: (c: Candidate) => void,
+  onUpdateBallot: (b: Ballot) => void,
 };
 
 type State = {
@@ -53,6 +54,7 @@ class PollDetailsView extends Component<Props, State> {
           poll={this.props.poll}
           ballotKey={this.context.getKey()}
           ballot={b}
+          onUpdateBallot={this.props.onUpdateBallot}
         />
       </li>
     ));

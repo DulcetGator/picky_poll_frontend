@@ -40,6 +40,13 @@ class PollDetails extends Component<Props, State> {
       this.setState({ ...okState, ballots });
     }
 
+    const handleUpdateBallot = (updated: Ballot) => {
+      const updatedPosition = okState.ballots.findIndex(item => item.id === updated.id);
+      const ballots = [...okState.ballots];
+      ballots[updatedPosition] = updated;
+      this.setState({ ...okState, ballots});
+    }
+
     const handleSubmitNewCandidate = (c: Candidate) => {
       const candidates = [...okState.poll.candidates, c];
       okState.poll.candidates = candidates;
@@ -52,6 +59,7 @@ class PollDetails extends Component<Props, State> {
         ballots={okState.ballots}
         onSubmitNewBallot={handleSubmitNewBallot}
         onSubmitNewCandidate={handleSubmitNewCandidate}
+        onUpdateBallot={handleUpdateBallot}
       />
     );
   }

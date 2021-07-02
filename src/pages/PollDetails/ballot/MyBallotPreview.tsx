@@ -39,6 +39,7 @@ type Props = {
   poll: Poll,
   ballotKey: string,
   ballot: Ballot,
+  onUpdateBallot: (b: Ballot) => void
 }
 
 type State = {
@@ -60,6 +61,7 @@ export default class MyBallotPreview extends Component<Props, State> {
       ballot,
       isEditing: false,
     });
+    this.props.onUpdateBallot(ballot);
   }
 
   handleEdit() {
