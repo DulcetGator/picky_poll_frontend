@@ -22,7 +22,7 @@ type State = {
   }[],
   configuration: {
     writeIns: boolean
-  }
+  },
   offerExample: boolean,
 };
 
@@ -87,8 +87,6 @@ export default class CreatePoll extends Component<Props, State> {
           />
           <FormControl
             onChange={(e) => this.handleCandidateDescriptionChange(index, e.currentTarget.value)}
-            as="textarea"
-            rows={1}
             placeholder={`(Optional) description`}
           />
         </InputGroup>
@@ -113,9 +111,9 @@ export default class CreatePoll extends Component<Props, State> {
                 Description (Optional)
               </Form.Label>
                 <FormControl
+                  placeholder="What is your preference among the following choices?"
                   as="textarea"
                   rows={2}
-                  placeholder="What is your preference among the following choices?"
                   value={this.state.description}
                   onChange={(e) => this.handleDescriptionChange(e.currentTarget.value)}
                 />
