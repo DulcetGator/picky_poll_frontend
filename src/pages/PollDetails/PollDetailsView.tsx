@@ -179,6 +179,7 @@ class PollDetailsView extends Component<Props, State> {
         {this.unownedBallotsSection()}
         {this.writeInSubmitter()}
         {this.redundantBallotSection()}
+        {this.expiresSection()}
       </div>
     );
   }
@@ -198,6 +199,15 @@ class PollDetailsView extends Component<Props, State> {
 
   shouldShowCandidateDetails() {
     return this.props.poll.candidates.findIndex(c => c.description) >= 0;
+  }
+
+  expiresSection() {
+    const expiresDate = new Date(this.props.poll.expires);
+    const dateFormat: Intl.DateTimeFormatOptions = {month: "long", day: "numeric"};
+    const expiresString = expiresDate.toLocaleDateString('en-US', dateFormat);
+    return <div>
+      This poll will be deleted after {expiresString}.
+    </div>
   }
 }
 

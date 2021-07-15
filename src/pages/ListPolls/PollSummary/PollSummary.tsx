@@ -43,10 +43,15 @@ export default class PollSummary extends Component<Props, State> {
         pollState: { status: 'ok', poll },
       });
     } else {
-      this.setState({
-        ...this.state,
-        pollState: { status: 'notfound' },
-      });
+      const expires = new Date(this.props.knownPoll.poll.expires);
+      if (expires < new Date()) {
+        this.props.onRemove(this.props.knownPoll);
+      } else {
+        this.setState({
+          ...this.state,
+          pollState: { status: 'notfound' },
+        });
+      }
     }
   }
 
